@@ -13,8 +13,6 @@ from __future__ import annotations
 import json
 import logging
 import re
-from collections import Counter
-from typing import Any
 
 import httpx
 
@@ -119,9 +117,7 @@ Respond with ONLY the JSON object, no other text.
     def _build_prompt(self, trace: TaskTrace) -> str:
         """Construct the annotation prompt from trace data."""
         # Format agent roles
-        roles_text = "\n".join(
-            f"  - {role}: {desc}" for role, desc in trace.agent_roles.items()
-        )
+        roles_text = "\n".join(f"  - {role}: {desc}" for role, desc in trace.agent_roles.items())
 
         # Format messages (limit to avoid context overflow)
         content_msgs = [m for m in trace.messages if m.message_type.is_content]
@@ -147,9 +143,7 @@ Respond with ONLY the JSON object, no other text.
             actual_output=actual_output,
         )
 
-    def _parse_response(
-        self, response: str, trace: TaskTrace
-    ) -> list[FailureAnnotation]:
+    def _parse_response(self, response: str, trace: TaskTrace) -> list[FailureAnnotation]:
         """Parse LLM JSON response into FailureAnnotation objects."""
         # Extract JSON from response (handle markdown code blocks)
         json_match = re.search(r"\{.*\}", response, re.DOTALL)
@@ -182,10 +176,7 @@ Respond with ONLY the JSON object, no other text.
                 confidence = float(item.get("confidence", 0.5))
                 confidence = min(1.0, max(0.0, confidence))
 
-                if (
-                    confidence < settings.annotation_confidence_threshold
-                    and category_str != "none"
-                ):
+                if confidence < settings.annotation_confidence_threshold and category_str != "none":
                     continue
 
                 annotation = FailureAnnotation(
