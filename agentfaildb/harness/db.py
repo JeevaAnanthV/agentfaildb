@@ -198,9 +198,7 @@ class Database:
     def get_trace(self, trace_id: UUID) -> TaskTrace | None:
         """Fetch a complete trace with all its messages (annotations not included)."""
         trace_sql = "SELECT * FROM traces WHERE trace_id = %s"
-        messages_sql = (
-            "SELECT * FROM messages WHERE trace_id = %s ORDER BY message_index ASC"
-        )
+        messages_sql = "SELECT * FROM messages WHERE trace_id = %s ORDER BY message_index ASC"
 
         with self._cursor() as cur:
             cur.execute(trace_sql, (trace_id,))

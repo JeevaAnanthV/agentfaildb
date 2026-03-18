@@ -105,7 +105,10 @@ class BaseRunner(ABC):
                     try:
                         actual_output = future.result(timeout=30)
                         run_metadata["timeout_recovered"] = True
-                        logger.info("Task %s: recovered output after timeout grace period", self.task.task_id)
+                        logger.info(
+                            "Task %s: recovered output after timeout grace period",
+                            self.task.task_id,
+                        )
                     except (concurrent.futures.TimeoutError, Exception):
                         actual_output = ""
                     future.cancel()

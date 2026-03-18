@@ -58,7 +58,10 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "mean sales value reported as approximately 165.8 or 1990/12", "weight": 0.25},
+                {
+                    "test": "mean sales value reported as approximately 165.8 or 1990/12",
+                    "weight": 0.25,
+                },
                 {"test": "December identified as highest sales month with 250", "weight": 0.25},
                 {"test": "March identified as lowest sales month with 110", "weight": 0.25},
                 {"test": "median reported as approximately 152.5 or 155", "weight": 0.25},
@@ -92,7 +95,10 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
             "assertions": [
                 {"test": "overall remote preference is 36% (180/500)", "weight": 0.25},
                 {"test": "overall hybrid preference is 44% (220/500)", "weight": 0.25},
-                {"test": "Engineering department most prefers remote work (53% remote)", "weight": 0.25},
+                {
+                    "test": "Engineering department most prefers remote work (53% remote)",
+                    "weight": 0.25,
+                },
                 {"test": "Sales department most prefers office work (33% office)", "weight": 0.25},
             ],
             "threshold": 0.7,
@@ -122,9 +128,15 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         ground_truth={
             "assertions": [
                 {"test": "overall conversion rate (sessions to orders) is 2.8%", "weight": 0.25},
-                {"test": "largest absolute drop-off is Sessions to Product_Views (5500 users)", "weight": 0.25},
+                {
+                    "test": "largest absolute drop-off is Sessions to Product_Views (5500 users)",
+                    "weight": 0.25,
+                },
                 {"test": "checkout to payment drop-off rate is 33.3%", "weight": 0.25},
-                {"test": "20% improvement at largest drop-off generates approximately $7280 additional revenue weekly", "weight": 0.25},
+                {
+                    "test": "20% improvement at largest drop-off generates approximately $7280 additional revenue weekly",
+                    "weight": 0.25,
+                },
             ],
             "threshold": 0.7,
         },
@@ -154,7 +166,10 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
                 {"test": "control conversion rate is 3.7% (185/5000)", "weight": 0.2},
                 {"test": "treatment conversion rate is 4.7% (235/5000)", "weight": 0.2},
                 {"test": "relative lift is approximately 27% or 27.0%", "weight": 0.2},
-                {"test": "result declared statistically significant (z-stat > 1.96)", "weight": 0.2},
+                {
+                    "test": "result declared statistically significant (z-stat > 1.96)",
+                    "weight": 0.2,
+                },
                 {"test": "recommendation to implement the redesign", "weight": 0.2},
             ],
             "threshold": 0.7,
@@ -186,7 +201,10 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
                 {"test": "overall churn rate is 20% (400/2000)", "weight": 0.2},
                 {"test": "Free tier churn rate is 25% (200/800)", "weight": 0.2},
                 {"test": "0-3 month tenure highest churn rate at 60% (180/300)", "weight": 0.25},
-                {"test": "new customers (0-3 months) identified as highest-risk segment", "weight": 0.2},
+                {
+                    "test": "new customers (0-3 months) identified as highest-risk segment",
+                    "weight": 0.2,
+                },
                 {"test": "at least two retention interventions recommended", "weight": 0.15},
             ],
             "threshold": 0.7,
@@ -216,11 +234,20 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "2021 revenue growth rate approximately 129% ((4.8-2.1)/2.1)", "weight": 0.2},
+                {
+                    "test": "2021 revenue growth rate approximately 129% ((4.8-2.1)/2.1)",
+                    "weight": 0.2,
+                },
                 {"test": "2024 gross margin approximately 23.7% ((22.4-17.1)/22.4)", "weight": 0.2},
-                {"test": "Rule of 40 calculated as revenue growth % plus profit margin %", "weight": 0.2},
+                {
+                    "test": "Rule of 40 calculated as revenue growth % plus profit margin %",
+                    "weight": 0.2,
+                },
                 {"test": "revenue per customer increasing trend identified", "weight": 0.2},
-                {"test": "trend toward profitability in 2023-2024 identified (narrowing losses)", "weight": 0.2},
+                {
+                    "test": "trend toward profitability in 2023-2024 identified (narrowing losses)",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.7,
         },
@@ -254,8 +281,14 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
             "assertions": [
                 {"test": "Jan cohort M1 retained users = 650 (1000 * 0.65)", "weight": 0.25},
                 {"test": "Jan cohort M4 retained users = 320 (1000 * 0.32)", "weight": 0.25},
-                {"test": "M1 retention improving trend: Jan=65%, Feb=68%, Mar=62%, Apr=70%", "weight": 0.25},
-                {"test": "LTV calculation involves $12/month times projected retention over 6 months", "weight": 0.25},
+                {
+                    "test": "M1 retention improving trend: Jan=65%, Feb=68%, Mar=62%, Apr=70%",
+                    "weight": 0.25,
+                },
+                {
+                    "test": "LTV calculation involves $12/month times projected retention over 6 months",
+                    "weight": 0.25,
+                },
             ],
             "threshold": 0.7,
         },
@@ -287,10 +320,22 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         ground_truth={
             "claims": [
                 {"claim": "Electronics mean on-time delivery approximately 76-77%", "weight": 0.2},
-                {"claim": "Electronics has higher variance or standard deviation than Chemicals", "weight": 0.2},
-                {"claim": "correlation between Electronics and Packaging disruptions identified (lagged)", "weight": 0.2},
-                {"claim": "disruption event timing suggests supply chain shock with lag effect", "weight": 0.2},
-                {"claim": "financial impact quantified as approximately $500K on $5M budget", "weight": 0.2},
+                {
+                    "claim": "Electronics has higher variance or standard deviation than Chemicals",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "correlation between Electronics and Packaging disruptions identified (lagged)",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "disruption event timing suggests supply chain shock with lag effect",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "financial impact quantified as approximately $500K on $5M budget",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.6,
         },
@@ -321,9 +366,15 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "Product A total revenue $4.3M vs Product B $3.9M reported accurately", "weight": 0.25},
+                {
+                    "claim": "Product A total revenue $4.3M vs Product B $3.9M reported accurately",
+                    "weight": 0.25,
+                },
                 {"claim": "Product B growth trend or acceleration mentioned", "weight": 0.35},
-                {"claim": "report does not provide misleadingly one-sided conclusion favoring A", "weight": 0.4},
+                {
+                    "claim": "report does not provide misleadingly one-sided conclusion favoring A",
+                    "weight": 0.4,
+                },
             ],
             "threshold": 0.5,
         },
@@ -352,9 +403,18 @@ DATA_ANALYSIS_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "data quality issue identified (column headers shifted or misaligned)", "weight": 0.4},
-                {"claim": "likely correct mapping inferred (age should be salary, salary should be age, etc.)", "weight": 0.3},
-                {"claim": "analysis proceeds with corrected interpretation or explicitly flags the issue", "weight": 0.3},
+                {
+                    "claim": "data quality issue identified (column headers shifted or misaligned)",
+                    "weight": 0.4,
+                },
+                {
+                    "claim": "likely correct mapping inferred (age should be salary, salary should be age, etc.)",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "analysis proceeds with corrected interpretation or explicitly flags the issue",
+                    "weight": 0.3,
+                },
             ],
             "threshold": 0.5,
         },

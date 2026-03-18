@@ -28,8 +28,7 @@ def get_runner_class(framework: str) -> type[BaseRunner]:
     path = _RUNNER_REGISTRY.get(framework.lower())
     if path is None:
         raise ValueError(
-            f"Unknown framework '{framework}'. "
-            f"Supported: {sorted(_RUNNER_REGISTRY.keys())}"
+            f"Unknown framework '{framework}'. Supported: {sorted(_RUNNER_REGISTRY.keys())}"
         )
     module_path, class_name = path.rsplit(".", 1)
     module = importlib.import_module(module_path)

@@ -33,6 +33,7 @@ def _get_model() -> Any:
     global _embedding_model
     if _embedding_model is None:
         from sentence_transformers import SentenceTransformer  # noqa: PLC0415
+
         _embedding_model = SentenceTransformer(_MODEL_NAME)
     return _embedding_model
 
@@ -60,10 +61,7 @@ class RoleViolationPattern(BasePattern):
             return []
 
         # Filter to RESPONSE messages only — these represent actual agent outputs
-        response_msgs = [
-            m for m in messages
-            if m.message_type.value == "response"
-        ]
+        response_msgs = [m for m in messages if m.message_type.value == "response"]
 
         if not response_msgs:
             return []
@@ -72,7 +70,9 @@ class RoleViolationPattern(BasePattern):
         try:
             return self._detect_with_embeddings(trace, response_msgs, agent_roles)
         except Exception as embed_exc:
-            logger.warning("Embedding-based role detection failed, falling back to keywords: %s", embed_exc)
+            logger.warning(
+                "Embedding-based role detection failed, falling back to keywords: %s", embed_exc
+            )
             return self._detect_with_keywords(trace, response_msgs, agent_roles)
 
     def _detect_with_embeddings(

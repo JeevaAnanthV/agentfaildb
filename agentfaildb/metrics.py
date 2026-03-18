@@ -67,7 +67,7 @@ def compute_failure_rates(
 
     # Build result
     by_framework: dict[str, Any] = {}
-    for fw in (set(_FRAMEWORKS) | set(framework_counts.keys())):
+    for fw in set(_FRAMEWORKS) | set(framework_counts.keys()):
         total = total_by_framework.get(fw, 0)
         if total == 0:
             continue
@@ -196,11 +196,13 @@ def compute_resource_exhaustion_baselines(
     groups: dict[str, list[dict[str, float]]] = defaultdict(list)
     for trace in traces:
         key = f"{trace.task_category}:{trace.task_difficulty}"
-        groups[key].append({
-            "tokens": trace.total_api_tokens,
-            "time_s": trace.total_time_seconds,
-            "messages": len(trace.messages),
-        })
+        groups[key].append(
+            {
+                "tokens": trace.total_api_tokens,
+                "time_s": trace.total_time_seconds,
+                "messages": len(trace.messages),
+            }
+        )
 
     baselines: dict[str, dict[str, float]] = {}
     for key, samples in groups.items():

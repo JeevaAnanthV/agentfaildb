@@ -91,8 +91,7 @@ class FailureDetector:
         else:
             # Exclude INTERNAL_REASONING from the trace copy
             filtered_messages = [
-                m for m in trace.messages
-                if m.message_type != MessageType.INTERNAL_REASONING
+                m for m in trace.messages if m.message_type != MessageType.INTERNAL_REASONING
             ]
             analysis_trace = trace.model_copy(update={"messages": filtered_messages})
 
@@ -162,9 +161,7 @@ class FailureDetector:
         return {"annotations": [a.model_dump(mode="json") for a in annotations]}
 
     @staticmethod
-    def _deserialise_annotations(
-        data: dict[str, Any], trace: TaskTrace
-    ) -> list[FailureAnnotation]:
+    def _deserialise_annotations(data: dict[str, Any], trace: TaskTrace) -> list[FailureAnnotation]:
 
         results = []
         for item in data.get("annotations", []):

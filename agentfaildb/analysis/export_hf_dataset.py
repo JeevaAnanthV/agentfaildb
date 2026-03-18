@@ -59,49 +59,55 @@ def _export(out_dir: Path, train_frac: float = 0.8) -> None:
         finally:
             db2.disconnect()
 
-        failure_categories = list({a.category.value for a in annotations if a.category.value != "none"})
+        failure_categories = list(
+            {a.category.value for a in annotations if a.category.value != "none"}
+        )
         max_severity = _max_severity(annotations)
 
-        trace_rows.append({
-            "trace_id": str(trace.trace_id),
-            "framework": trace.framework,
-            "task_id": trace.task_id,
-            "task_category": trace.task_category,
-            "task_difficulty": trace.task_difficulty,
-            "task_description": trace.task_description,
-            "ground_truth_type": trace.ground_truth_type.value,
-            "ground_truth": json.dumps(trace.ground_truth) if trace.ground_truth else None,
-            "actual_output": trace.actual_output,
-            "total_api_tokens": trace.total_api_tokens,
-            "total_content_tokens": trace.total_content_tokens,
-            "context_overhead_ratio": trace.context_overhead_ratio,
-            "total_time_seconds": trace.total_time_seconds,
-            "num_agents": trace.num_agents,
-            "num_messages": len(trace.messages),
-            "num_content_messages": len(trace.content_messages),
-            "task_success": trace.task_success,
-            "task_score": trace.task_score,
-            "model_used": trace.model_used,
-            "run_timestamp": trace.run_timestamp.isoformat(),
-            "has_failure": len(failure_categories) > 0,
-            "failure_categories": json.dumps(failure_categories),
-            "max_severity": max_severity,
-            "num_annotations": len(annotations),
-        })
+        trace_rows.append(
+            {
+                "trace_id": str(trace.trace_id),
+                "framework": trace.framework,
+                "task_id": trace.task_id,
+                "task_category": trace.task_category,
+                "task_difficulty": trace.task_difficulty,
+                "task_description": trace.task_description,
+                "ground_truth_type": trace.ground_truth_type.value,
+                "ground_truth": json.dumps(trace.ground_truth) if trace.ground_truth else None,
+                "actual_output": trace.actual_output,
+                "total_api_tokens": trace.total_api_tokens,
+                "total_content_tokens": trace.total_content_tokens,
+                "context_overhead_ratio": trace.context_overhead_ratio,
+                "total_time_seconds": trace.total_time_seconds,
+                "num_agents": trace.num_agents,
+                "num_messages": len(trace.messages),
+                "num_content_messages": len(trace.content_messages),
+                "task_success": trace.task_success,
+                "task_score": trace.task_score,
+                "model_used": trace.model_used,
+                "run_timestamp": trace.run_timestamp.isoformat(),
+                "has_failure": len(failure_categories) > 0,
+                "failure_categories": json.dumps(failure_categories),
+                "max_severity": max_severity,
+                "num_annotations": len(annotations),
+            }
+        )
 
         for msg in trace.messages:
-            message_rows.append({
-                "trace_id": str(trace.trace_id),
-                "message_index": msg.message_index,
-                "source_agent": msg.source_agent,
-                "target_agent": msg.target_agent,
-                "content": msg.content,
-                "message_type": msg.message_type.value,
-                "is_content_message": msg.message_type.is_content,
-                "api_token_count": msg.api_token_count,
-                "content_token_count": msg.content_token_count,
-                "model_used": msg.model_used,
-            })
+            message_rows.append(
+                {
+                    "trace_id": str(trace.trace_id),
+                    "message_index": msg.message_index,
+                    "source_agent": msg.source_agent,
+                    "target_agent": msg.target_agent,
+                    "content": msg.content,
+                    "message_type": msg.message_type.value,
+                    "is_content_message": msg.message_type.is_content,
+                    "api_token_count": msg.api_token_count,
+                    "content_token_count": msg.content_token_count,
+                    "model_used": msg.model_used,
+                }
+            )
 
     traces_df = pd.DataFrame(trace_rows)
     messages_df = pd.DataFrame(message_rows)
@@ -182,11 +188,11 @@ size_categories:
 
 **The first benchmark dataset for failure modes in multi-agent LLM systems.**
 
-> **{stats['failure_rate']:.1%} of multi-agent runs exhibit at least one failure mode.**
+> **{stats["failure_rate"]:.1%} of multi-agent runs exhibit at least one failure mode.**
 
 ## Dataset Description
 
-AgentFailDB contains {stats['total_traces']:,} annotated execution traces from four
+AgentFailDB contains {stats["total_traces"]:,} annotated execution traces from four
 multi-agent frameworks (CrewAI, AutoGen, LangGraph, MetaGPT) across five task
 categories and four difficulty levels.  Each trace is annotated with one or more
 of seven failure categories derived from a formal taxonomy.
@@ -224,8 +230,8 @@ print(df.groupby("framework")["has_failure"].mean().sort_values(ascending=False)
 
 | File | Description |
 |------|-------------|
-| `train_traces.parquet` | {stats['train_traces']} training traces (one row per task run) |
-| `test_traces.parquet` | {stats['test_traces']} test traces |
+| `train_traces.parquet` | {stats["train_traces"]} training traces (one row per task run) |
+| `test_traces.parquet` | {stats["test_traces"]} test traces |
 | `train_messages.parquet` | Individual agent messages for training traces |
 | `test_messages.parquet` | Individual agent messages for test traces |
 

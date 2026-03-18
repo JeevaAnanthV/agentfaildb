@@ -195,10 +195,12 @@ def _show_failure_rate_by_framework(data: dict[str, Any], st: Any) -> None:
         st.info("No framework data available")
         return
 
-    df = pd.DataFrame([
-        {"Framework": fw, "Failure Rate (%)": fw_data.get("failure_rate", 0) * 100}
-        for fw, fw_data in by_fw.items()
-    ]).sort_values("Failure Rate (%)", ascending=False)
+    df = pd.DataFrame(
+        [
+            {"Framework": fw, "Failure Rate (%)": fw_data.get("failure_rate", 0) * 100}
+            for fw, fw_data in by_fw.items()
+        ]
+    ).sort_values("Failure Rate (%)", ascending=False)
 
     st.subheader("Failure Rate by Framework")
     st.bar_chart(df.set_index("Framework")["Failure Rate (%)"])
@@ -217,11 +219,13 @@ def _show_failure_category_distribution(data: dict[str, Any], st: Any) -> None:
         st.info("No category data available")
         return
 
-    df = pd.DataFrame([
-        {"Category": cat, "Rate (%)": v.get("rate", 0) * 100}
-        for cat, v in by_cat.items()
-        if cat != "none"
-    ]).sort_values("Rate (%)", ascending=False)
+    df = pd.DataFrame(
+        [
+            {"Category": cat, "Rate (%)": v.get("rate", 0) * 100}
+            for cat, v in by_cat.items()
+            if cat != "none"
+        ]
+    ).sort_values("Rate (%)", ascending=False)
 
     st.subheader("Failure Rate by Category")
     st.bar_chart(df.set_index("Category")["Rate (%)"])
@@ -266,13 +270,15 @@ def _show_resource_exhaustion(data: dict[str, Any], st: Any) -> None:
         rows = []
         for key, vals in baselines.items():
             category, difficulty = key.split(":", 1) if ":" in key else (key, "unknown")
-            rows.append({
-                "Category": category,
-                "Difficulty": difficulty,
-                "Median Tokens": int(vals.get("tokens", 0)),
-                "Median Time (s)": round(vals.get("time_s", 0), 1),
-                "Median Messages": int(vals.get("messages", 0)),
-            })
+            rows.append(
+                {
+                    "Category": category,
+                    "Difficulty": difficulty,
+                    "Median Tokens": int(vals.get("tokens", 0)),
+                    "Median Time (s)": round(vals.get("time_s", 0), 1),
+                    "Median Messages": int(vals.get("messages", 0)),
+                }
+            )
 
         df = pd.DataFrame(rows).sort_values(["Category", "Difficulty"])
         st.dataframe(df, use_container_width=True)
@@ -313,14 +319,16 @@ def _show_top_failed_tasks(data: dict[str, Any], st: Any) -> None:
     for task_id, stats in task_stats.items():
         total = stats["total"]
         failed = stats["failed"]
-        rows.append({
-            "Task ID": task_id,
-            "Category": stats["category"],
-            "Difficulty": stats["difficulty"],
-            "Total Runs": total,
-            "Failed Runs": failed,
-            "Failure Rate": f"{failed / max(total, 1):.1%}",
-        })
+        rows.append(
+            {
+                "Task ID": task_id,
+                "Category": stats["category"],
+                "Difficulty": stats["difficulty"],
+                "Total Runs": total,
+                "Failed Runs": failed,
+                "Failure Rate": f"{failed / max(total, 1):.1%}",
+            }
+        )
 
     rows_sorted = sorted(rows, key=lambda r: r["Failed Runs"], reverse=True)[:10]
 
@@ -330,6 +338,7 @@ def _show_top_failed_tasks(data: dict[str, Any], st: Any) -> None:
 
     try:
         import pandas as pd  # noqa: PLC0415
+
         df = pd.DataFrame(rows_sorted)
         st.dataframe(df, use_container_width=True)
     except ImportError:

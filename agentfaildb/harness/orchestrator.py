@@ -43,10 +43,7 @@ def get_completed_from_db(db: Database) -> set[str]:
     This is the authoritative source of truth on restart: even if Redis was
     flushed or the machine was rebooted, we never re-run work already in the DB.
     """
-    sql = (
-        "SELECT DISTINCT task_id, framework FROM traces "
-        "WHERE task_success IS NOT NULL"
-    )
+    sql = "SELECT DISTINCT task_id, framework FROM traces WHERE task_success IS NOT NULL"
     completed: set[str] = set()
     try:
         if db._conn is None or db._conn.closed:
@@ -136,11 +133,13 @@ class Orchestrator:
         # Evaluate against ground truth
         try:
             task_success, task_score, method = self.evaluator.evaluate(trace)
-            trace = trace.model_copy(update={
-                "task_success": task_success,
-                "task_score": task_score,
-                "task_success_method": method,
-            })
+            trace = trace.model_copy(
+                update={
+                    "task_success": task_success,
+                    "task_score": task_score,
+                    "task_success_method": method,
+                }
+            )
         except Exception as eval_exc:
             logger.warning("Evaluation failed for trace %s: %s", trace.trace_id, eval_exc)
 
@@ -452,9 +451,9 @@ if __name__ == "__main__":
             remaining = total_runs - len(completed_pairs)
             pct = 100.0 * len(completed_pairs) / total_runs if total_runs else 0
 
-            print(f"\n{'='*55}")
+            print(f"\n{'=' * 55}")
             print("  AgentFailDB Benchmark Status")
-            print(f"{'='*55}")
+            print(f"{'=' * 55}")
             print(f"  Total task definitions : {total_tasks}")
             print(f"  Frameworks             : {', '.join(_SUPPORTED_FRAMEWORKS)}")
             print(f"  Total planned runs     : {total_runs}")
@@ -466,7 +465,7 @@ if __name__ == "__main__":
             print("\n  Per-framework progress:")
             for b in breakdown:
                 print(f"    {b['framework']:<12} {b['done']} done")
-            print(f"{'='*55}\n")
+            print(f"{'=' * 55}\n")
         except Exception as status_exc:
             print(f"Status query failed: {status_exc}")
         finally:
@@ -478,6 +477,7 @@ if __name__ == "__main__":
     if not args.no_checkpoint:
         try:
             from agentfaildb.harness.db import RedisClient  # noqa: PLC0415
+
             redis_client = RedisClient()
             redis_client.connect()
             print("Redis checkpoint enabled.")

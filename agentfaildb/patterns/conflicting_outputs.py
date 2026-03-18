@@ -30,6 +30,7 @@ def _get_model() -> Any:
     global _embedding_model
     if _embedding_model is None:
         from sentence_transformers import SentenceTransformer  # noqa: PLC0415
+
         _embedding_model = SentenceTransformer(_MODEL_NAME)
     return _embedding_model
 
@@ -83,9 +84,7 @@ class ConflictingOutputsPattern(BasePattern):
         model = _get_model()
 
         # Encode task description + all representative messages
-        texts = [trace.task_description[:500]] + [
-            rep_msgs[a].content[:1000] for a in agents
-        ]
+        texts = [trace.task_description[:500]] + [rep_msgs[a].content[:1000] for a in agents]
         embeddings = model.encode(texts).tolist()
         task_embedding = embeddings[0]
         msg_embeddings = {agents[i]: embeddings[i + 1] for i in range(len(agents))}
@@ -103,10 +102,7 @@ class ConflictingOutputsPattern(BasePattern):
             # Both must be relevant to the task
             task_sim_1 = _cosine_similarity(e1, task_embedding)
             task_sim_2 = _cosine_similarity(e2, task_embedding)
-            if (
-                task_sim_1 < _TASK_RELEVANCE_THRESHOLD
-                or task_sim_2 < _TASK_RELEVANCE_THRESHOLD
-            ):
+            if task_sim_1 < _TASK_RELEVANCE_THRESHOLD or task_sim_2 < _TASK_RELEVANCE_THRESHOLD:
                 continue
 
             conflicts.append((a1, a2, mutual_sim))

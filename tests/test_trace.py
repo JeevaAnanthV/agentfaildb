@@ -195,12 +195,27 @@ class TestTraceToDbDict:
 
         # Must contain all traces-table columns
         expected_keys = {
-            "trace_id", "framework", "task_category", "task_difficulty", "task_id",
-            "task_description", "ground_truth_type", "ground_truth", "actual_output",
-            "total_api_tokens", "total_content_tokens", "context_overhead_ratio",
-            "total_time_seconds", "num_agents", "agent_roles",
-            "task_success", "task_score", "task_success_method",
-            "model_used", "run_timestamp", "run_config",
+            "trace_id",
+            "framework",
+            "task_category",
+            "task_difficulty",
+            "task_id",
+            "task_description",
+            "ground_truth_type",
+            "ground_truth",
+            "actual_output",
+            "total_api_tokens",
+            "total_content_tokens",
+            "context_overhead_ratio",
+            "total_time_seconds",
+            "num_agents",
+            "agent_roles",
+            "task_success",
+            "task_score",
+            "task_success_method",
+            "model_used",
+            "run_timestamp",
+            "run_config",
         }
         assert expected_keys.issubset(db_dict.keys())
 

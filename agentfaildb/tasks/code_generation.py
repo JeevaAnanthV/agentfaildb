@@ -113,9 +113,18 @@ CODE_GENERATION_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "cache=LRUCache(2); cache.put(1,1); cache.put(2,2); cache.get(1)==1", "weight": 0.2},
-                {"test": "cache=LRUCache(2); cache.put(1,1); cache.put(2,2); cache.put(3,3); cache.get(2)==-1", "weight": 0.3},
-                {"test": "cache=LRUCache(1); cache.put(1,1); cache.put(2,2); cache.get(1)==-1", "weight": 0.3},
+                {
+                    "test": "cache=LRUCache(2); cache.put(1,1); cache.put(2,2); cache.get(1)==1",
+                    "weight": 0.2,
+                },
+                {
+                    "test": "cache=LRUCache(2); cache.put(1,1); cache.put(2,2); cache.put(3,3); cache.get(2)==-1",
+                    "weight": 0.3,
+                },
+                {
+                    "test": "cache=LRUCache(1); cache.put(1,1); cache.put(2,2); cache.get(1)==-1",
+                    "weight": 0.3,
+                },
                 {"test": "LRUCache(2).get(99)==-1", "weight": 0.2},
             ],
             "threshold": 0.8,
@@ -140,7 +149,10 @@ CODE_GENERATION_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "merge_intervals([[1,3],[2,6],[8,10],[15,18]]) == [[1,6],[8,10],[15,18]]", "weight": 0.35},
+                {
+                    "test": "merge_intervals([[1,3],[2,6],[8,10],[15,18]]) == [[1,6],[8,10],[15,18]]",
+                    "weight": 0.35,
+                },
                 {"test": "merge_intervals([[1,4],[4,5]]) == [[1,5]]", "weight": 0.3},
                 {"test": "merge_intervals([]) == []", "weight": 0.2},
                 {"test": "merge_intervals([[1,10],[2,3],[4,5]]) == [[1,10]]", "weight": 0.15},
@@ -199,9 +211,15 @@ CODE_GENERATION_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "q=ThreadSafeQueue(2); q.enqueue('a'); q.enqueue('b'); q.is_full()==True", "weight": 0.2},
+                {
+                    "test": "q=ThreadSafeQueue(2); q.enqueue('a'); q.enqueue('b'); q.is_full()==True",
+                    "weight": 0.2,
+                },
                 {"test": "q=ThreadSafeQueue(2); q.enqueue('a'); q.dequeue()=='a'", "weight": 0.2},
-                {"test": "q=ThreadSafeQueue(1); q.enqueue('x'); q.enqueue('y',timeout=0.01)==False", "weight": 0.3},
+                {
+                    "test": "q=ThreadSafeQueue(1); q.enqueue('x'); q.enqueue('y',timeout=0.01)==False",
+                    "weight": 0.3,
+                },
                 {"test": "q=ThreadSafeQueue(2); q.is_empty()==True; q.size()==0", "weight": 0.3},
             ],
             "threshold": 0.8,
@@ -229,8 +247,14 @@ CODE_GENERATION_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "dijkstra({'A':{'B':1,'C':4},'B':{'C':2,'D':5},'C':{'D':1},'D':{}}, 'A','D') == (4.0,['A','B','C','D'])", "weight": 0.4},
-                {"test": "dijkstra({'A':{'B':1},'B':{}}, 'A','C') == (float('inf'),[])", "weight": 0.3},
+                {
+                    "test": "dijkstra({'A':{'B':1,'C':4},'B':{'C':2,'D':5},'C':{'D':1},'D':{}}, 'A','D') == (4.0,['A','B','C','D'])",
+                    "weight": 0.4,
+                },
+                {
+                    "test": "dijkstra({'A':{'B':1},'B':{}}, 'A','C') == (float('inf'),[])",
+                    "weight": 0.3,
+                },
                 {"test": "dijkstra({'A':{}}, 'A','A')[0] == 0.0", "weight": 0.3},
             ],
             "threshold": 0.8,
@@ -257,9 +281,18 @@ CODE_GENERATION_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "assertions": [
-                {"test": "rl=RateLimiter(5,1.0); [rl.acquire() for _ in range(5)]; rl.remaining()==0", "weight": 0.3},
-                {"test": "rl=RateLimiter(2,1.0) is usable as context manager without exception", "weight": 0.3},
-                {"test": "RateLimiter class defined with __enter__ and __exit__ methods", "weight": 0.2},
+                {
+                    "test": "rl=RateLimiter(5,1.0); [rl.acquire() for _ in range(5)]; rl.remaining()==0",
+                    "weight": 0.3,
+                },
+                {
+                    "test": "rl=RateLimiter(2,1.0) is usable as context manager without exception",
+                    "weight": 0.3,
+                },
+                {
+                    "test": "RateLimiter class defined with __enter__ and __exit__ methods",
+                    "weight": 0.2,
+                },
                 {"test": "RateLimiter has acquire method and remaining method", "weight": 0.2},
             ],
             "threshold": 0.8,
