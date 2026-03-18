@@ -60,7 +60,7 @@ def main() -> None:
     category_filter = None if selected_category == "All" else selected_category
 
     difficulty_options = ["All", "easy", "medium", "hard", "adversarial"]
-    selected_difficulty = st.sidebar.selectbox("Difficulty", difficulty_options)
+    st.sidebar.selectbox("Difficulty", difficulty_options)
 
     # ── Data loading ──────────────────────────────────────────────────────────
     data = _load_data(framework_filter, category_filter)
@@ -291,7 +291,7 @@ def _show_top_failed_tasks(data: dict[str, Any], st: Any) -> None:
         return
 
     try:
-        from agentfaildb.harness.db import Database  # noqa: PLC0415
+        import agentfaildb.harness.db  # noqa: PLC0415, F401
     except ImportError:
         st.info("Database unavailable")
         return

@@ -13,11 +13,10 @@ import sys
 import time
 from typing import Any
 
-from agentfaildb.config import settings
 from agentfaildb.detector import FailureDetector
 from agentfaildb.evaluator import GroundTruthEvaluator
 from agentfaildb.harness.db import Database
-from agentfaildb.harness.trace_collector import TraceCollector, get_collector
+from agentfaildb.harness.trace_collector import get_collector
 from agentfaildb.runners import get_runner_class
 from agentfaildb.tasks import ALL_TASKS, get_tasks_by_category, get_tasks_by_difficulty
 from agentfaildb.tasks.base_task import BaseTask
@@ -102,14 +101,11 @@ class Orchestrator:
         # (handled inside BaseRunner.execute) are NOT retried here — the runner
         # itself captures them and returns a partial trace.
         trace: TaskTrace | None = None
-        last_exc: Exception | None = None
         for attempt in range(1, _MAX_RETRIES + 1):
             try:
                 trace = runner.execute()
-                last_exc = None
                 break
             except Exception as exc:
-                last_exc = exc
                 if attempt < _MAX_RETRIES:
                     delay = _RETRY_BASE_DELAY * (2 ** (attempt - 1))
                     logger.warning(
@@ -371,7 +367,6 @@ class Orchestrator:
 
 if __name__ == "__main__":
     import argparse
-    import os
 
     logging.basicConfig(
         level=logging.INFO,
@@ -468,7 +463,7 @@ if __name__ == "__main__":
             print(f"  DB rows (all)          : {row['total_traces']}")
             print(f"  Succeeded              : {row['succeeded']}")
             print(f"  Failed                 : {row['failed']}")
-            print(f"\n  Per-framework progress:")
+            print("\n  Per-framework progress:")
             for b in breakdown:
                 print(f"    {b['framework']:<12} {b['done']} done")
             print(f"{'='*55}\n")

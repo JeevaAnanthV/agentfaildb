@@ -106,7 +106,6 @@ class ContextDegradationPattern(BasePattern):
             final_content = last_msg.content.lower()
 
             early_present = [t for t in key_terms if t in early_content]
-            final_present = [t for t in early_present if t in final_content]
             dropped_terms = [t for t in early_present if t not in final_content]
 
             if early_present and (len(dropped_terms) / len(early_present)) > _KEY_TERM_DROP_RATIO:

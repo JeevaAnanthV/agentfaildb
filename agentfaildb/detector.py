@@ -13,7 +13,6 @@ Rules:
 from __future__ import annotations
 
 import hashlib
-import json
 import logging
 from typing import Any
 
@@ -166,11 +165,6 @@ class FailureDetector:
     def _deserialise_annotations(
         data: dict[str, Any], trace: TaskTrace
     ) -> list[FailureAnnotation]:
-        from agentfaildb.trace import (  # noqa: PLC0415
-            AnnotationSource,
-            FailureCategory,
-            FailureSeverity,
-        )
 
         results = []
         for item in data.get("annotations", []):

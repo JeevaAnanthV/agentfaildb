@@ -12,8 +12,7 @@ Functions:
 from __future__ import annotations
 
 import logging
-import math
-from collections import Counter, defaultdict
+from collections import defaultdict
 from typing import Any
 
 from agentfaildb.harness.db import Database

@@ -7,15 +7,10 @@ without requiring live framework runs or LLM calls.
 
 from __future__ import annotations
 
-from datetime import datetime
-from uuid import uuid4
 
-import pytest
 
 from agentfaildb.trace import (
     AgentMessage,
-    AnnotationSource,
-    FailureAnnotation,
     FailureCategory,
     FailureSeverity,
     GroundTruthType,
@@ -311,7 +306,7 @@ class TestCascadingHallucinationPattern:
         task_desc = "Write a Python function to sort a list using bubble sort algorithm."
         msgs = [
             _make_msg(i, agent, "next",
-                      f"The function uses bubble sort algorithm to sort the list in Python.")
+                      "The function uses bubble sort algorithm to sort the list in Python.")
             for i, agent in enumerate(["coder", "reviewer", "tester"])
         ]
         trace = _make_trace(msgs, task_description=task_desc)
@@ -352,7 +347,6 @@ class TestFailureDetector:
 
     def test_detector_attaches_trace_id(self) -> None:
         from agentfaildb.detector import FailureDetector
-        from unittest.mock import MagicMock, patch
 
         detector = FailureDetector()
         messages = [

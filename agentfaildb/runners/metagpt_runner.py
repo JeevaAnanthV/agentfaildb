@@ -41,7 +41,6 @@ class MetaGPTRunner(BaseRunner):
             from metagpt.config2 import Config  # noqa: PLC0415
             from metagpt.environment import Environment  # noqa: PLC0415
             from metagpt.roles.role import Role  # noqa: PLC0415
-            from metagpt.schema import Message  # noqa: PLC0415
             from metagpt.team import Team  # noqa: PLC0415
         except ImportError as exc:
             raise ImportError(

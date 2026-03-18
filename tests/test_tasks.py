@@ -4,10 +4,8 @@ Tests for the task registry and task definition validity.
 
 from __future__ import annotations
 
-import pytest
 
 from agentfaildb.tasks import ALL_TASKS, get_tasks_by_category, get_tasks_by_difficulty
-from agentfaildb.tasks.base_task import BaseTask
 from agentfaildb.trace import GroundTruthType
 
 _REQUIRED_FRAMEWORKS = {"crewai", "autogen", "langgraph", "metagpt"}

@@ -81,7 +81,6 @@ class ResourceExhaustionPattern(BasePattern):
     def detect(self, trace: TaskTrace) -> list["FailureAnnotation"]:  # noqa: F821
         baseline = self._get_baseline(trace.task_category, trace.task_difficulty)
 
-        annotations = []
         worst_ratio = 0.0
         worst_metric = ""
 

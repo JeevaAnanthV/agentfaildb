@@ -24,7 +24,7 @@ import tiktoken
 from agentfaildb.config import settings
 from agentfaildb.harness.trace_collector import TraceCollector
 from agentfaildb.tasks.base_task import BaseTask
-from agentfaildb.trace import MessageType, TaskTrace
+from agentfaildb.trace import TaskTrace
 
 logger = logging.getLogger(__name__)
 
