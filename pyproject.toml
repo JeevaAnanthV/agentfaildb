@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentfaildb"
+version = "0.1.0"
+description = "Benchmark and detection library for multi-agent LLM failure modes"
+license = {text = "MIT"}
+authors = [{name = "Jeeva Ananth V"}]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.5",
+    "pydantic-settings>=2.1",
+    "psycopg2-binary>=2.9",
+    "redis>=5.0",
+    "tiktoken>=0.5",
+    "fastapi>=0.109",
+    "uvicorn[standard]>=0.27",
+    "httpx>=0.26",
+    "python-dotenv>=1.0",
+    "structlog>=24.1",
+]
+
+[project.optional-dependencies]
+# Heavy ML deps — needed to run pattern detectors with embedding-based detection
+ml = [
+    "sentence-transformers>=2.7",
+    "numpy>=1.26",
+    "scipy>=1.12",
+]
+# Framework deps — needed to run actual benchmark tasks
+frameworks = [
+    "crewai>=0.28",
+    "pyautogen>=0.2",
+    "langgraph>=0.0.40",
+    "langchain-openai>=0.0.8",
+    "metagpt>=0.7",
+    "asyncpg>=0.29",
+]
+# Analysis & leaderboard
+analysis = [
+    "streamlit>=1.31",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "numpy>=1.26",
+]
+# Full install — everything
+full = [
+    "agentfaildb[ml,frameworks,analysis]",
+]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=4.1",
+    "ruff>=0.2",
+    "mypy>=1.8",
+    "agentfaildb[ml]",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agentfaildb*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
