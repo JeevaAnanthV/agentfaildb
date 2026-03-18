@@ -129,8 +129,7 @@ class LangGraphRunner(BaseRunner):
             ) -> Any:
                 def node_fn(state: AgentState) -> AgentState:
                     system_prompt = (
-                        f"You are the {_fr}. {_desc}\n"
-                        f"Complete your assigned portion of the task."
+                        f"You are the {_fr}. {_desc}\nComplete your assigned portion of the task."
                     )
                     # Build messages from state
                     history = state.get("messages", [])
@@ -150,13 +149,13 @@ class LangGraphRunner(BaseRunner):
                         logger.warning("Node %s failed: %s", _role, node_exc)
                         content = f"[{_role} encountered an error: {node_exc}]"
 
-                    new_messages = list(history) + [
-                        HumanMessage(content=content, name=_role)
-                    ]
+                    new_messages = list(history) + [HumanMessage(content=content, name=_role)]
                     return {
                         "messages": new_messages,
                         "current_agent": _next,
-                        "task_output": content if _next in ("END", "orchestrator") else state.get("task_output", ""),
+                        "task_output": content
+                        if _next in ("END", "orchestrator")
+                        else state.get("task_output", ""),
                     }
 
                 return node_fn

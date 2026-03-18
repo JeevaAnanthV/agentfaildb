@@ -7,7 +7,6 @@ LLM/Ollama calls are mocked so these tests run offline.
 from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
-from uuid import uuid4
 
 import pytest
 

@@ -14,7 +14,6 @@ Thresholds:
 from __future__ import annotations
 
 from collections import Counter
-from typing import Any
 
 from agentfaildb.patterns.base_pattern import BasePattern
 from agentfaildb.trace import FailureCategory, FailureSeverity, TaskTrace

@@ -103,5 +103,6 @@ class SilentFailurePattern(BasePattern):
     def _get_evaluator(self) -> Any:
         if self._evaluator is None:
             from agentfaildb.evaluator import GroundTruthEvaluator  # noqa: PLC0415
+
             self._evaluator = GroundTruthEvaluator()
         return self._evaluator

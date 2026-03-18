@@ -12,7 +12,6 @@ If ANTHROPIC_API_KEY is set, Tier 2/3 calls fall back to the Claude API.
 
 from __future__ import annotations
 
-import json
 import logging
 import re
 from typing import Any
@@ -53,9 +52,11 @@ class GroundTruthEvaluator:
         # which may not contain the original claims verbatim.
         if trace.messages:
             from agentfaildb.config import settings as _s  # noqa: PLC0415
+
             content_types = _s.content_message_types()
             full_context = "\n\n".join(
-                m.content for m in trace.messages
+                m.content
+                for m in trace.messages
                 if m.message_type.value in content_types and m.content
             )
             eval_text = full_context if full_context else actual
@@ -196,13 +197,60 @@ class GroundTruthEvaluator:
         non-zero: prevents a slow Ollama from scoring everything as 0.
         """
         _STOP = {
-            "a", "an", "the", "is", "are", "was", "were", "be", "been",
-            "being", "have", "has", "had", "do", "does", "did", "will",
-            "would", "could", "should", "may", "might", "shall", "can",
-            "of", "in", "on", "at", "to", "for", "and", "or", "but",
-            "not", "with", "from", "by", "as", "that", "this", "it",
-            "its", "than", "their", "they", "them", "over", "above",
-            "into", "between", "compared", "during", "two", "key",
+            "a",
+            "an",
+            "the",
+            "is",
+            "are",
+            "was",
+            "were",
+            "be",
+            "been",
+            "being",
+            "have",
+            "has",
+            "had",
+            "do",
+            "does",
+            "did",
+            "will",
+            "would",
+            "could",
+            "should",
+            "may",
+            "might",
+            "shall",
+            "can",
+            "of",
+            "in",
+            "on",
+            "at",
+            "to",
+            "for",
+            "and",
+            "or",
+            "but",
+            "not",
+            "with",
+            "from",
+            "by",
+            "as",
+            "that",
+            "this",
+            "it",
+            "its",
+            "than",
+            "their",
+            "they",
+            "them",
+            "over",
+            "above",
+            "into",
+            "between",
+            "compared",
+            "during",
+            "two",
+            "key",
         }
         claim_words = [
             w.lower().strip(".,;:!?\"'")
@@ -217,7 +265,9 @@ class GroundTruthEvaluator:
         coverage = matched / len(claim_words)
         logger.debug(
             "Keyword fallback: %d/%d claim words matched (%.0f%%)",
-            matched, len(claim_words), coverage * 100,
+            matched,
+            len(claim_words),
+            coverage * 100,
         )
         # Require at least 50% keyword match to count as covered
         return coverage >= 0.5

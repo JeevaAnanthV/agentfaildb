@@ -7,15 +7,9 @@ without requiring live framework runs or LLM calls.
 
 from __future__ import annotations
 
-from datetime import datetime
-from uuid import uuid4
-
-import pytest
 
 from agentfaildb.trace import (
     AgentMessage,
-    AnnotationSource,
-    FailureAnnotation,
     FailureCategory,
     FailureSeverity,
     GroundTruthType,
@@ -115,7 +109,9 @@ class TestDelegationLoopPattern:
             _make_msg(1, "reviewer", "tester", "Please test.", MessageType.TASK_DELEGATION),
             _make_msg(2, "coder", "reviewer", "Please review again.", MessageType.TASK_DELEGATION),
             _make_msg(3, "reviewer", "tester", "Test again.", MessageType.TASK_DELEGATION),
-            _make_msg(4, "coder", "reviewer", "Please review once more.", MessageType.TASK_DELEGATION),
+            _make_msg(
+                4, "coder", "reviewer", "Please review once more.", MessageType.TASK_DELEGATION
+            ),
             _make_msg(5, "reviewer", "tester", "Test once more.", MessageType.TASK_DELEGATION),
             _make_msg(6, "coder", "reviewer", "Review 4.", MessageType.TASK_DELEGATION),
             _make_msg(7, "reviewer", "tester", "Test 4.", MessageType.TASK_DELEGATION),
@@ -162,12 +158,13 @@ class TestResourceExhaustionPattern:
         from agentfaildb.patterns.resource_exhaustion import ResourceExhaustionPattern
 
         messages = [
-            _make_msg(i, "coder", "reviewer", "Normal response", api_tokens=500)
-            for i in range(5)
+            _make_msg(i, "coder", "reviewer", "Normal response", api_tokens=500) for i in range(5)
         ]
         trace = _make_trace(messages)
         # Baseline: 5000 tokens; actual: 2500 — well within 3×
-        pattern = ResourceExhaustionPattern(baselines={"tokens": 5000, "time_s": 120, "messages": 20})
+        pattern = ResourceExhaustionPattern(
+            baselines={"tokens": 5000, "time_s": 120, "messages": 20}
+        )
         annotations = pattern.detect(trace)
         assert annotations == []
 
@@ -180,7 +177,9 @@ class TestResourceExhaustionPattern:
             for i in range(30)
         ]
         trace = _make_trace(messages)
-        pattern = ResourceExhaustionPattern(baselines={"tokens": 1000, "time_s": 120, "messages": 10})
+        pattern = ResourceExhaustionPattern(
+            baselines={"tokens": 1000, "time_s": 120, "messages": 10}
+        )
         annotations = pattern.detect(trace)
         assert len(annotations) == 1
         assert annotations[0].category == FailureCategory.RESOURCE_EXHAUSTION
@@ -192,7 +191,9 @@ class TestResourceExhaustionPattern:
         messages = [_make_msg(i, "a", "b", "response", api_tokens=1000) for i in range(4)]
         trace = _make_trace(messages)
         trace = trace.model_copy(update={"total_time_seconds": 0.0})
-        pattern = ResourceExhaustionPattern(baselines={"tokens": 1000, "time_s": 9999, "messages": 9999})
+        pattern = ResourceExhaustionPattern(
+            baselines={"tokens": 1000, "time_s": 9999, "messages": 9999}
+        )
         annotations = pattern.detect(trace)
         if annotations:
             assert annotations[0].severity == FailureSeverity.MINOR
@@ -208,20 +209,23 @@ class TestRoleViolationPattern:
         # Coder writes code — matches coder role description
         messages = [
             _make_msg(
-                0, "coder", "reviewer",
+                0,
+                "coder",
+                "reviewer",
                 "def sort_list(lst): return sorted(lst) # O(n log n) implementation",
             ),
         ]
-        trace = _make_trace(messages, agent_roles={
-            "coder": "Writes implementation code and algorithms in Python.",
-            "reviewer": "Reviews code quality and correctness.",
-            "tester": "Writes test cases for verification.",
-        })
+        trace = _make_trace(
+            messages,
+            agent_roles={
+                "coder": "Writes implementation code and algorithms in Python.",
+                "reviewer": "Reviews code quality and correctness.",
+                "tester": "Writes test cases for verification.",
+            },
+        )
         pattern = RoleViolationPattern()
         # Use keyword fallback to avoid requiring sentence-transformers in tests
-        annotations = pattern._detect_with_keywords(
-            trace, [messages[0]], trace.agent_roles
-        )
+        annotations = pattern._detect_with_keywords(trace, [messages[0]], trace.agent_roles)
         # Coder writing code should not flag — keyword overlap with own role is high
         # We just check the function runs without error
         assert isinstance(annotations, list)
@@ -236,15 +240,16 @@ class TestRoleViolationPattern:
             "autumn leaves gently falling poem verse stanza rhyme"
         )
         messages = [_make_msg(0, "coder", "reviewer", poetry_content)]
-        trace = _make_trace(messages, agent_roles={
-            "coder": "Writes implementation code and programming algorithms.",
-            "reviewer": "Reviews haiku poetry verses stanzas rhymes creative writing.",
-            "tester": "Writes unit tests and assertions.",
-        })
-        pattern = RoleViolationPattern()
-        annotations = pattern._detect_with_keywords(
-            trace, messages, trace.agent_roles
+        trace = _make_trace(
+            messages,
+            agent_roles={
+                "coder": "Writes implementation code and programming algorithms.",
+                "reviewer": "Reviews haiku poetry verses stanzas rhymes creative writing.",
+                "tester": "Writes unit tests and assertions.",
+            },
         )
+        pattern = RoleViolationPattern()
+        annotations = pattern._detect_with_keywords(trace, messages, trace.agent_roles)
         # Poetry message overlaps heavily with reviewer's keywords (haiku, verses, etc.)
         # This may or may not trigger depending on threshold; we verify no crash
         assert isinstance(annotations, list)
@@ -310,8 +315,12 @@ class TestCascadingHallucinationPattern:
         # Content that repeats task description terms — should NOT flag
         task_desc = "Write a Python function to sort a list using bubble sort algorithm."
         msgs = [
-            _make_msg(i, agent, "next",
-                      f"The function uses bubble sort algorithm to sort the list in Python.")
+            _make_msg(
+                i,
+                agent,
+                "next",
+                "The function uses bubble sort algorithm to sort the list in Python.",
+            )
             for i, agent in enumerate(["coder", "reviewer", "tester"])
         ]
         trace = _make_trace(msgs, task_description=task_desc)
@@ -325,7 +334,9 @@ class TestCascadingHallucinationPattern:
         # All three agents repeat an ungrounded factual claim
         ungrounded = "the fibonacci sequence was invented by leonardo bonacci in twelve oh two"
         msgs = [
-            _make_msg(i, agent, "next", f"Important note: {ungrounded}. Here is the implementation.")
+            _make_msg(
+                i, agent, "next", f"Important note: {ungrounded}. Here is the implementation."
+            )
             for i, agent in enumerate(["coder", "reviewer", "tester"])
         ]
         trace = _make_trace(msgs, task_description="Write a sorting function.")
@@ -352,7 +363,6 @@ class TestFailureDetector:
 
     def test_detector_attaches_trace_id(self) -> None:
         from agentfaildb.detector import FailureDetector
-        from unittest.mock import MagicMock, patch
 
         detector = FailureDetector()
         messages = [

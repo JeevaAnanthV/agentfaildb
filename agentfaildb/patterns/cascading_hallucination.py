@@ -21,7 +21,6 @@ from __future__ import annotations
 
 import re
 from collections import defaultdict
-from typing import Any
 
 from agentfaildb.patterns.base_pattern import BasePattern
 from agentfaildb.trace import FailureCategory, FailureSeverity, TaskTrace

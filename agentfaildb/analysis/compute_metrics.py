@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -29,7 +28,6 @@ def main() -> int:
     from agentfaildb.metrics import (  # noqa: PLC0415
         compute_context_overhead_stats,
         compute_failure_rates,
-        compute_macro_kappa,
         compute_resource_exhaustion_baselines,
     )
 

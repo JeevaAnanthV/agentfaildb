@@ -4,10 +4,8 @@ Tests for the task registry and task definition validity.
 
 from __future__ import annotations
 
-import pytest
 
 from agentfaildb.tasks import ALL_TASKS, get_tasks_by_category, get_tasks_by_difficulty
-from agentfaildb.tasks.base_task import BaseTask
 from agentfaildb.trace import GroundTruthType
 
 _REQUIRED_FRAMEWORKS = {"crewai", "autogen", "langgraph", "metagpt"}
@@ -29,9 +27,7 @@ class TestAllTasksCount:
     def test_each_category_has_10_tasks(self) -> None:
         for category in _VALID_CATEGORIES:
             tasks = get_tasks_by_category(category)
-            assert len(tasks) == 10, (
-                f"Category '{category}' has {len(tasks)} tasks, expected 10"
-            )
+            assert len(tasks) == 10, f"Category '{category}' has {len(tasks)} tasks, expected 10"
 
     def test_difficulty_distribution_per_category(self) -> None:
         """Each category must have 2 easy, 3 medium, 3 hard, 2 adversarial."""
@@ -107,7 +103,9 @@ class TestCanonicalRoles:
         for task in ALL_TASKS:
             for role, desc in task.canonical_roles.items():
                 assert isinstance(role, str), f"{task.task_id} role key not a string"
-                assert isinstance(desc, str) and desc, f"{task.task_id} role '{role}' has empty description"
+                assert isinstance(desc, str) and desc, (
+                    f"{task.task_id} role '{role}' has empty description"
+                )
 
 
 class TestFrameworkRoleMappings:

@@ -32,6 +32,7 @@ logger = logging.getLogger(__name__)
 
 # ── In-memory run progress tracker ────────────────────────────────────────────
 
+
 class _RunProgress:
     """Thread-safe progress tracker for batch runs."""
 
@@ -309,13 +310,18 @@ def get_metrics(
     """
     try:
         from agentfaildb.metrics import compute_failure_rates  # noqa: PLC0415
+
         db = _get_db()
         metrics = compute_failure_rates(db, framework=framework)
-        return {"status": "ok", "metrics": metrics, "filters": {
-            "framework": framework,
-            "task_category": task_category,
-            "difficulty": difficulty,
-        }}
+        return {
+            "status": "ok",
+            "metrics": metrics,
+            "filters": {
+                "framework": framework,
+                "task_category": task_category,
+                "difficulty": difficulty,
+            },
+        }
     except Exception as exc:
         logger.exception("Metrics computation failed: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc))
@@ -388,7 +394,7 @@ def list_traces(
             limit=limit + offset,
         )
         # Apply offset manually (DB layer doesn't support it yet)
-        traces = traces[offset:offset + limit]
+        traces = traces[offset : offset + limit]
     except Exception as exc:
         logger.exception("Trace listing failed: %s", exc)
         raise HTTPException(status_code=500, detail=str(exc))

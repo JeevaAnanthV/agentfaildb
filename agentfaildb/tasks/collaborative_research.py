@@ -56,9 +56,15 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "lithium ions move between anode and cathode during charge and discharge", "weight": 0.25},
+                {
+                    "claim": "lithium ions move between anode and cathode during charge and discharge",
+                    "weight": 0.25,
+                },
                 {"claim": "solid electrolyte replaces liquid electrolyte", "weight": 0.25},
-                {"claim": "reduced flammability or improved safety compared to liquid batteries", "weight": 0.25},
+                {
+                    "claim": "reduced flammability or improved safety compared to liquid batteries",
+                    "weight": 0.25,
+                },
                 {"claim": "potential for higher energy density", "weight": 0.25},
             ],
             "threshold": 0.6,
@@ -83,9 +89,18 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "limit global warming to well below 2 degrees Celsius above pre-industrial levels", "weight": 0.3},
-                {"claim": "nationally determined contributions are country-level climate pledges", "weight": 0.3},
-                {"claim": "green climate fund or financial support for developing nations", "weight": 0.2},
+                {
+                    "claim": "limit global warming to well below 2 degrees Celsius above pre-industrial levels",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "nationally determined contributions are country-level climate pledges",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "green climate fund or financial support for developing nations",
+                    "weight": 0.2,
+                },
                 {"claim": "agreement entered into force in 2016", "weight": 0.2},
             ],
             "threshold": 0.6,
@@ -111,11 +126,23 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "Taiwan Semiconductor Manufacturing Company (TSMC) dominates advanced chip fabrication", "weight": 0.2},
+                {
+                    "claim": "Taiwan Semiconductor Manufacturing Company (TSMC) dominates advanced chip fabrication",
+                    "weight": 0.2,
+                },
                 {"claim": "CHIPS and Science Act passed in the United States", "weight": 0.2},
-                {"claim": "EU Chips Act aims to double Europe's share of global semiconductor production", "weight": 0.2},
-                {"claim": "photolithography equipment from ASML is a key chokepoint", "weight": 0.2},
-                {"claim": "South Korea is a major producer through Samsung and SK Hynix", "weight": 0.2},
+                {
+                    "claim": "EU Chips Act aims to double Europe's share of global semiconductor production",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "photolithography equipment from ASML is a key chokepoint",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "South Korea is a major producer through Samsung and SK Hynix",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.6,
         },
@@ -140,10 +167,19 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         ground_truth={
             "claims": [
                 {"claim": "carbon tax sets a price per unit of emissions", "weight": 0.15},
-                {"claim": "cap-and-trade sets a limit on total emissions and allows trading of permits", "weight": 0.15},
+                {
+                    "claim": "cap-and-trade sets a limit on total emissions and allows trading of permits",
+                    "weight": 0.15,
+                },
                 {"claim": "British Columbia carbon tax reduced emissions", "weight": 0.2},
-                {"claim": "EU Emissions Trading System is the largest cap-and-trade scheme", "weight": 0.2},
-                {"claim": "carbon taxes provide price certainty while cap-and-trade provides quantity certainty", "weight": 0.15},
+                {
+                    "claim": "EU Emissions Trading System is the largest cap-and-trade scheme",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "carbon taxes provide price certainty while cap-and-trade provides quantity certainty",
+                    "weight": 0.15,
+                },
                 {"claim": "revenue recycling or dividend mechanisms exist", "weight": 0.15},
             ],
             "threshold": 0.6,
@@ -168,11 +204,23 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "AlphaFold predicts protein 3D structure from amino acid sequence", "weight": 0.2},
-                {"claim": "LLMs or transformer models applied to molecular design or SMILES representations", "weight": 0.2},
+                {
+                    "claim": "AlphaFold predicts protein 3D structure from amino acid sequence",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "LLMs or transformer models applied to molecular design or SMILES representations",
+                    "weight": 0.2,
+                },
                 {"claim": "generative models can propose novel drug-like molecules", "weight": 0.2},
-                {"claim": "limitation: lack of experimental validation or wet-lab confirmation required", "weight": 0.2},
-                {"claim": "target identification uses LLMs to mine biomedical literature", "weight": 0.2},
+                {
+                    "claim": "limitation: lack of experimental validation or wet-lab confirmation required",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "target identification uses LLMs to mine biomedical literature",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.6,
         },
@@ -199,13 +247,31 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "European natural gas prices spiked significantly in 2022", "weight": 0.15},
+                {
+                    "claim": "European natural gas prices spiked significantly in 2022",
+                    "weight": 0.15,
+                },
                 {"claim": "EU accelerated renewable energy deployment as response", "weight": 0.15},
-                {"claim": "REPowerEU plan to reduce dependence on Russian fossil fuels", "weight": 0.15},
-                {"claim": "global LNG demand increased and new import terminals constructed", "weight": 0.15},
-                {"claim": "Ukraine and Russia are major wheat and sunflower oil exporters", "weight": 0.15},
-                {"claim": "fertiliser prices rose due to Russian exports being sanctioned or reduced", "weight": 0.1},
-                {"claim": "long-term structural shift toward energy independence or diversification", "weight": 0.15},
+                {
+                    "claim": "REPowerEU plan to reduce dependence on Russian fossil fuels",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "global LNG demand increased and new import terminals constructed",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "Ukraine and Russia are major wheat and sunflower oil exporters",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "fertiliser prices rose due to Russian exports being sanctioned or reduced",
+                    "weight": 0.1,
+                },
+                {
+                    "claim": "long-term structural shift toward energy independence or diversification",
+                    "weight": 0.15,
+                },
             ],
             "threshold": 0.65,
         },
@@ -231,13 +297,34 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "SMRs have power output below 300 MWe or are modular and factory-built", "weight": 0.15},
-                {"claim": "NuScale or Rolls-Royce SMR or similar as a leading commercial project", "weight": 0.15},
-                {"claim": "Gen IV designs include molten salt, fast neutron, or high-temperature gas-cooled reactors", "weight": 0.15},
-                {"claim": "passive safety systems reduce reliance on active cooling", "weight": 0.15},
-                {"claim": "economic challenge: high upfront capital costs or cost overruns in nuclear construction", "weight": 0.15},
-                {"claim": "US NRC or UK ONR involved in regulatory approval process", "weight": 0.1},
-                {"claim": "potential for lower per-kWh cost through economies of series production", "weight": 0.15},
+                {
+                    "claim": "SMRs have power output below 300 MWe or are modular and factory-built",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "NuScale or Rolls-Royce SMR or similar as a leading commercial project",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "Gen IV designs include molten salt, fast neutron, or high-temperature gas-cooled reactors",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "passive safety systems reduce reliance on active cooling",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "economic challenge: high upfront capital costs or cost overruns in nuclear construction",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "US NRC or UK ONR involved in regulatory approval process",
+                    "weight": 0.1,
+                },
+                {
+                    "claim": "potential for lower per-kWh cost through economies of series production",
+                    "weight": 0.15,
+                },
             ],
             "threshold": 0.65,
         },
@@ -263,13 +350,34 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "AI used in credit scoring to assess loan default probability", "weight": 0.15},
-                {"claim": "algorithmic trading accounts for a significant share of market volume", "weight": 0.1},
-                {"claim": "AI used in real-time fraud detection and transaction monitoring", "weight": 0.1},
-                {"claim": "evidence of racial or demographic bias in algorithmic lending decisions", "weight": 0.2},
-                {"claim": "EU AI Act classifies credit scoring as high-risk AI application", "weight": 0.15},
-                {"claim": "explainability or right to explanation requirement under GDPR or regulatory frameworks", "weight": 0.15},
-                {"claim": "tension between black-box model accuracy and interpretable model requirements", "weight": 0.15},
+                {
+                    "claim": "AI used in credit scoring to assess loan default probability",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "algorithmic trading accounts for a significant share of market volume",
+                    "weight": 0.1,
+                },
+                {
+                    "claim": "AI used in real-time fraud detection and transaction monitoring",
+                    "weight": 0.1,
+                },
+                {
+                    "claim": "evidence of racial or demographic bias in algorithmic lending decisions",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "EU AI Act classifies credit scoring as high-risk AI application",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "explainability or right to explanation requirement under GDPR or regulatory frameworks",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "tension between black-box model accuracy and interpretable model requirements",
+                    "weight": 0.15,
+                },
             ],
             "threshold": 0.65,
         },
@@ -296,9 +404,18 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "acknowledges that RSA-2048 has NOT yet been broken by quantum computers", "weight": 0.4},
-                {"claim": "notes that current quantum computers lack sufficient error-corrected qubits", "weight": 0.3},
-                {"claim": "mentions harvest-now-decrypt-later as the realistic near-term threat", "weight": 0.3},
+                {
+                    "claim": "acknowledges that RSA-2048 has NOT yet been broken by quantum computers",
+                    "weight": 0.4,
+                },
+                {
+                    "claim": "notes that current quantum computers lack sufficient error-corrected qubits",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "mentions harvest-now-decrypt-later as the realistic near-term threat",
+                    "weight": 0.3,
+                },
             ],
             "threshold": 0.5,
         },
@@ -326,10 +443,22 @@ COLLABORATIVE_RESEARCH_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "report acknowledges debate or mixed evidence on UBI employment effects", "weight": 0.3},
-                {"claim": "Finland pilot, Stockton SEED, or Kenya GiveDirectly cited as evidence", "weight": 0.3},
-                {"claim": "concerns about fiscal cost or funding mechanisms mentioned", "weight": 0.2},
-                {"claim": "output does not simultaneously assert contradictory employment conclusions as equally valid", "weight": 0.2},
+                {
+                    "claim": "report acknowledges debate or mixed evidence on UBI employment effects",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "Finland pilot, Stockton SEED, or Kenya GiveDirectly cited as evidence",
+                    "weight": 0.3,
+                },
+                {
+                    "claim": "concerns about fiscal cost or funding mechanisms mentioned",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "output does not simultaneously assert contradictory employment conclusions as equally valid",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.5,
         },

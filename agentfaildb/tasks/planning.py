@@ -62,7 +62,10 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "domain registration or hosting setup included as a phase", "weight": 0.25},
+                {
+                    "claim": "domain registration or hosting setup included as a phase",
+                    "weight": 0.25,
+                },
                 {"claim": "content creation with specific post count or timeline", "weight": 0.25},
                 {"claim": "4-week timeline or phased schedule present", "weight": 0.25},
                 {"claim": "at least one risk or mitigation strategy identified", "weight": 0.25},
@@ -87,7 +90,10 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "role assignments for at least frontend, backend, and QA", "weight": 0.25},
+                {
+                    "claim": "role assignments for at least frontend, backend, and QA",
+                    "weight": 0.25,
+                },
                 {"claim": "hour or effort estimates per role or workstream", "weight": 0.25},
                 {"claim": "explicit scope deferral decisions for v2", "weight": 0.25},
                 {"claim": "3-month timeline respected in the plan", "weight": 0.25},
@@ -115,7 +121,10 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "UK ICO registration or GDPR UK compliance requirement mentioned", "weight": 0.2},
+                {
+                    "claim": "UK ICO registration or GDPR UK compliance requirement mentioned",
+                    "weight": 0.2,
+                },
                 {"claim": "German DSGVO or data protection requirements mentioned", "weight": 0.2},
                 {"claim": "go-to-market strategy addressing both markets", "weight": 0.2},
                 {"claim": "localisation or translation requirements identified", "weight": 0.2},
@@ -144,7 +153,10 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "HIPAA compliance requirement identified as a risk or constraint", "weight": 0.2},
+                {
+                    "claim": "HIPAA compliance requirement identified as a risk or constraint",
+                    "weight": 0.2,
+                },
                 {"claim": "data security or PHI protection risk identified", "weight": 0.2},
                 {"claim": "downtime or service availability risk identified", "weight": 0.2},
                 {"claim": "staff training requirement mentioned", "weight": 0.2},
@@ -174,10 +186,19 @@ PLANNING_TASKS: list[BaseTask] = [
         ground_truth={
             "claims": [
                 {"claim": "sprint duration specified (1 or 2 weeks typical)", "weight": 0.2},
-                {"claim": "story point estimation method described (planning poker, t-shirt sizing, etc.)", "weight": 0.2},
-                {"claim": "definition of done for ML work items (model accuracy, validation, documentation)", "weight": 0.2},
+                {
+                    "claim": "story point estimation method described (planning poker, t-shirt sizing, etc.)",
+                    "weight": 0.2,
+                },
+                {
+                    "claim": "definition of done for ML work items (model accuracy, validation, documentation)",
+                    "weight": 0.2,
+                },
                 {"claim": "research spikes handled with time-boxed investigation", "weight": 0.2},
-                {"claim": "capacity planning formula or velocity calculation described", "weight": 0.2},
+                {
+                    "claim": "capacity planning formula or velocity calculation described",
+                    "weight": 0.2,
+                },
             ],
             "threshold": 0.6,
         },
@@ -206,11 +227,17 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "at least two e-commerce platforms compared with trade-offs", "weight": 0.15},
+                {
+                    "claim": "at least two e-commerce platforms compared with trade-offs",
+                    "weight": 0.15,
+                },
                 {"claim": "omnichannel inventory management addressed", "weight": 0.15},
                 {"claim": "staff retraining plan with scope (200+ employees)", "weight": 0.15},
                 {"claim": "data analytics or personalisation roadmap included", "weight": 0.15},
-                {"claim": "financial analysis or NPV comparison of platform options", "weight": 0.15},
+                {
+                    "claim": "financial analysis or NPV comparison of platform options",
+                    "weight": 0.15,
+                },
                 {"claim": "change management strategy or communication plan", "weight": 0.15},
                 {"claim": "18-month phased timeline with milestones", "weight": 0.1},
             ],
@@ -239,12 +266,24 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "GDPR 72-hour supervisory authority notification requirement addressed", "weight": 0.2},
+                {
+                    "claim": "GDPR 72-hour supervisory authority notification requirement addressed",
+                    "weight": 0.2,
+                },
                 {"claim": "PCI DSS breach response requirements mentioned", "weight": 0.15},
-                {"claim": "immediate containment or isolation actions in first hours", "weight": 0.2},
+                {
+                    "claim": "immediate containment or isolation actions in first hours",
+                    "weight": 0.2,
+                },
                 {"claim": "customer notification strategy with timeline", "weight": 0.15},
-                {"claim": "forensic investigation or digital evidence preservation", "weight": 0.15},
-                {"claim": "30/60/90 day remediation roadmap or equivalent phased recovery", "weight": 0.15},
+                {
+                    "claim": "forensic investigation or digital evidence preservation",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "30/60/90 day remediation roadmap or equivalent phased recovery",
+                    "weight": 0.15,
+                },
             ],
             "threshold": 0.65,
         },
@@ -272,10 +311,22 @@ PLANNING_TASKS: list[BaseTask] = [
         ground_truth={
             "claims": [
                 {"claim": "site selection methodology or criteria defined", "weight": 0.15},
-                {"claim": "grid capacity assessment or utility coordination required", "weight": 0.15},
-                {"claim": "planning permission or regulatory approval process addressed", "weight": 0.15},
-                {"claim": "equity or coverage in lower-income or underserved areas mentioned", "weight": 0.15},
-                {"claim": "public-private partnership or financing model described", "weight": 0.15},
+                {
+                    "claim": "grid capacity assessment or utility coordination required",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "planning permission or regulatory approval process addressed",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "equity or coverage in lower-income or underserved areas mentioned",
+                    "weight": 0.15,
+                },
+                {
+                    "claim": "public-private partnership or financing model described",
+                    "weight": 0.15,
+                },
                 {"claim": "KPIs or success metrics for the programme defined", "weight": 0.1},
                 {"claim": "24-month phased installation schedule", "weight": 0.15},
             ],
@@ -305,9 +356,15 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "plan identifies constraints as impossible or unrealistic", "weight": 0.4},
+                {
+                    "claim": "plan identifies constraints as impossible or unrealistic",
+                    "weight": 0.4,
+                },
                 {"claim": "suggests scope reduction or phased MVP approach", "weight": 0.3},
-                {"claim": "provides realistic timeline or budget estimates for the full scope", "weight": 0.3},
+                {
+                    "claim": "provides realistic timeline or budget estimates for the full scope",
+                    "weight": 0.3,
+                },
             ],
             "threshold": 0.5,
         },
@@ -334,9 +391,15 @@ PLANNING_TASKS: list[BaseTask] = [
         framework_role_mappings=_FRAMEWORK_ROLES,
         ground_truth={
             "claims": [
-                {"claim": "cost overruns or schedule delays in nuclear construction mentioned", "weight": 0.35},
+                {
+                    "claim": "cost overruns or schedule delays in nuclear construction mentioned",
+                    "weight": 0.35,
+                },
                 {"claim": "safety risks or regulatory complexity acknowledged", "weight": 0.35},
-                {"claim": "plan does not present nuclear construction as uniformly risk-free", "weight": 0.3},
+                {
+                    "claim": "plan does not present nuclear construction as uniformly risk-free",
+                    "weight": 0.3,
+                },
             ],
             "threshold": 0.5,
         },

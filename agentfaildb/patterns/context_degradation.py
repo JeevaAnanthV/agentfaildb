@@ -36,6 +36,7 @@ def _get_model() -> Any:
     global _embedding_model
     if _embedding_model is None:
         from sentence_transformers import SentenceTransformer  # noqa: PLC0415
+
         _embedding_model = SentenceTransformer(_MODEL_NAME)
     return _embedding_model
 
@@ -52,13 +53,71 @@ def _cosine_similarity(a: list[float], b: list[float]) -> float:
 
 
 _STOP_WORDS = {
-    "the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for",
-    "of", "with", "by", "from", "is", "are", "was", "were", "be", "been",
-    "have", "has", "had", "do", "does", "did", "will", "would", "could",
-    "should", "may", "might", "must", "shall", "that", "this", "these",
-    "those", "it", "its", "not", "no", "if", "as", "so", "than", "then",
-    "also", "all", "any", "both", "each", "more", "other", "such", "into",
-    "through", "during", "about", "above", "between", "out", "off", "over",
+    "the",
+    "a",
+    "an",
+    "and",
+    "or",
+    "but",
+    "in",
+    "on",
+    "at",
+    "to",
+    "for",
+    "of",
+    "with",
+    "by",
+    "from",
+    "is",
+    "are",
+    "was",
+    "were",
+    "be",
+    "been",
+    "have",
+    "has",
+    "had",
+    "do",
+    "does",
+    "did",
+    "will",
+    "would",
+    "could",
+    "should",
+    "may",
+    "might",
+    "must",
+    "shall",
+    "that",
+    "this",
+    "these",
+    "those",
+    "it",
+    "its",
+    "not",
+    "no",
+    "if",
+    "as",
+    "so",
+    "than",
+    "then",
+    "also",
+    "all",
+    "any",
+    "both",
+    "each",
+    "more",
+    "other",
+    "such",
+    "into",
+    "through",
+    "during",
+    "about",
+    "above",
+    "between",
+    "out",
+    "off",
+    "over",
 }
 
 
@@ -66,6 +125,7 @@ def _extract_key_terms(text: str, top_n: int = 10) -> list[str]:
     """Extract top_n most significant (non-stopword) terms from text."""
     words = re.findall(r"\b[a-zA-Z]{4,}\b", text.lower())
     from collections import Counter
+
     counts = Counter(w for w in words if w not in _STOP_WORDS)
     return [term for term, _ in counts.most_common(top_n)]
 
@@ -90,7 +150,9 @@ class ContextDegradationPattern(BasePattern):
         try:
             model = _get_model()
             embeddings = model.encode([first_msg.content[:1000], last_msg.content[:1000]])
-            similarity_score = float(_cosine_similarity(embeddings[0].tolist(), embeddings[1].tolist()))
+            similarity_score = float(
+                _cosine_similarity(embeddings[0].tolist(), embeddings[1].tolist())
+            )
             if similarity_score < _SIMILARITY_THRESHOLD:
                 similarity_flag = True
         except Exception as embed_exc:
@@ -102,11 +164,12 @@ class ContextDegradationPattern(BasePattern):
         dropped_terms: list[str] = []
 
         if key_terms:
-            early_content = " ".join(m.content for m in response_msgs[:max(1, len(response_msgs) // 2)]).lower()
+            early_content = " ".join(
+                m.content for m in response_msgs[: max(1, len(response_msgs) // 2)]
+            ).lower()
             final_content = last_msg.content.lower()
 
             early_present = [t for t in key_terms if t in early_content]
-            final_present = [t for t in early_present if t in final_content]
             dropped_terms = [t for t in early_present if t not in final_content]
 
             if early_present and (len(dropped_terms) / len(early_present)) > _KEY_TERM_DROP_RATIO:
@@ -138,8 +201,7 @@ class ContextDegradationPattern(BasePattern):
             )
         if term_drop_flag:
             description_parts.append(
-                f"Key task terms dropped from early to final messages: "
-                f"{dropped_terms[:5]}."
+                f"Key task terms dropped from early to final messages: {dropped_terms[:5]}."
             )
 
         description = "Context degradation detected. " + " ".join(description_parts)

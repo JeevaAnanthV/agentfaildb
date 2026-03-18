@@ -35,6 +35,7 @@ def _default_baselines() -> dict[str, Any]:
     Set BASELINE_TIME_SECONDS=600 for local Ollama on GTX 1650.
     """
     import os
+
     time_s = float(os.environ.get("BASELINE_TIME_SECONDS", "120.0"))
     tokens = int(os.environ.get("BASELINE_TOKENS", "10000"))
     messages = int(os.environ.get("BASELINE_MESSAGES", "30"))
@@ -81,7 +82,6 @@ class ResourceExhaustionPattern(BasePattern):
     def detect(self, trace: TaskTrace) -> list["FailureAnnotation"]:  # noqa: F821
         baseline = self._get_baseline(trace.task_category, trace.task_difficulty)
 
-        annotations = []
         worst_ratio = 0.0
         worst_metric = ""
 

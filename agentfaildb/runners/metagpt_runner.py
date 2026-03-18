@@ -41,7 +41,6 @@ class MetaGPTRunner(BaseRunner):
             from metagpt.config2 import Config  # noqa: PLC0415
             from metagpt.environment import Environment  # noqa: PLC0415
             from metagpt.roles.role import Role  # noqa: PLC0415
-            from metagpt.schema import Message  # noqa: PLC0415
             from metagpt.team import Team  # noqa: PLC0415
         except ImportError as exc:
             raise ImportError(
@@ -101,7 +100,9 @@ class MetaGPTRunner(BaseRunner):
                     try:
                         src_idx = roles_list.index(canonical_source)
                         next_idx = src_idx + 1
-                        canonical_target = roles_list[next_idx] if next_idx < len(roles_list) else "orchestrator"
+                        canonical_target = (
+                            roles_list[next_idx] if next_idx < len(roles_list) else "orchestrator"
+                        )
                     except ValueError:
                         canonical_target = "orchestrator"
 
@@ -177,6 +178,7 @@ class MetaGPTRunner(BaseRunner):
         if self._original_publish is not None:
             try:
                 from metagpt.environment import Environment  # noqa: PLC0415
+
                 Environment.publish_message = self._original_publish  # type: ignore[method-assign]
             except ImportError:
                 pass

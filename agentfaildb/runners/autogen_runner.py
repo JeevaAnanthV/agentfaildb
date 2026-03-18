@@ -126,7 +126,6 @@ class AutoGenRunner(BaseRunner):
 
         messages = getattr(self._groupchat, "messages", [])
         agent_names = [a.name for a in self._agents]
-        canonical_roles = list(self.task.canonical_roles.keys())
         role_mappings = self.task.framework_role_mappings.get("autogen", {})
         # Reverse mapping: framework_name → canonical_name
         reverse_mapping = {v: k for k, v in role_mappings.items()}

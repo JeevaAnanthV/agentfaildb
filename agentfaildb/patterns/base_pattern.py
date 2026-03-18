@@ -5,7 +5,6 @@ Abstract base class for all failure pattern detectors.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Any
 from uuid import UUID
 
 from agentfaildb.trace import (
@@ -14,7 +13,6 @@ from agentfaildb.trace import (
     FailureAnnotation,
     FailureCategory,
     FailureSeverity,
-    MessageType,
     TaskTrace,
 )
 
