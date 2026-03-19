@@ -5,8 +5,10 @@
 # Never re-runs completed tasks (double-checked via PostgreSQL + Redis).
 #
 # Usage:
-#   ./agentfaildb-runner.sh           # run the benchmark (foreground)
-#   ./agentfaildb-runner.sh --status  # print progress stats and exit
+#   ./agentfaildb-runner.sh                          # run the benchmark (foreground)
+#   ./agentfaildb-runner.sh --status                 # print progress stats and exit
+#   ./agentfaildb-runner.sh --until 08:00            # stop at 08:00
+#   ./agentfaildb-runner.sh --until 08:00 --stop-docker  # stop at 08:00, then stop Docker
 
 set -euo pipefail
 
@@ -37,6 +39,28 @@ die() {
     log "FATAL: $*"
     exit 1
 }
+
+# ── Parse arguments ───────────────────────────────────────────────────────────
+UNTIL_FLAG=""
+STOP_DOCKER=false
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --status)
+            POSITIONAL+=("--status")
+            shift ;;
+        --until)
+            UNTIL_FLAG="$2"
+            shift 2 ;;
+        --stop-docker)
+            STOP_DOCKER=true
+            shift ;;
+        *)
+            POSITIONAL+=("$1")
+            shift ;;
+    esac
+done
+set -- "${POSITIONAL[@]+"${POSITIONAL[@]}"}"
 
 # ── --status mode: no lock, no Docker check, just query DB and exit ───────────
 if [[ "${1:-}" == "--status" ]]; then
@@ -199,6 +223,18 @@ log "Starting orchestrator — all tasks x all frameworks, checkpoint/resume ena
 log "Estimated ~10 min/task on GTX 1650. Check progress: ./agentfaildb-runner.sh --status"
 
 cd "$PROJECT_DIR"
-python -m agentfaildb.harness.orchestrator 2>&1 | tee -a "$LOG_FILE"
+ORCHESTRATOR_ARGS=""
+if [[ -n "$UNTIL_FLAG" ]]; then
+    ORCHESTRATOR_ARGS="--until $UNTIL_FLAG"
+    log "Deadline flag: --until $UNTIL_FLAG"
+fi
+python -m agentfaildb.harness.orchestrator $ORCHESTRATOR_ARGS 2>&1 | tee -a "$LOG_FILE"
 
 log "Orchestrator exited."
+
+# ── Optional Docker teardown ─────────────────────────────────────────────────
+if [[ "$STOP_DOCKER" == "true" ]]; then
+    log "--stop-docker requested. Stopping Docker services..."
+    docker compose -f "$COMPOSE_FILE" stop 2>&1 | tee -a "$LOG_FILE"
+    log "Docker services stopped."
+fi

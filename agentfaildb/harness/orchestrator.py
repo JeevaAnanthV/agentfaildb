@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import json
 import logging
+import signal
 import sys
 import time
+from datetime import datetime
 from typing import Any
 
 from agentfaildb.detector import FailureDetector
@@ -24,10 +26,21 @@ from agentfaildb.trace import TaskTrace
 
 logger = logging.getLogger(__name__)
 
-_SUPPORTED_FRAMEWORKS = ["crewai", "autogen", "langgraph", "metagpt"]
+_SUPPORTED_FRAMEWORKS = ["crewai", "autogen", "langgraph"]
 
 # Redis key prefix for checkpoint tracking
 _CHECKPOINT_KEY = "agentfaildb:checkpoint"
+
+# Graceful shutdown flag — set by SIGTERM/SIGINT handler
+_shutdown_requested = False
+
+
+def _request_shutdown(signum: int, _frame: Any) -> None:
+    """Signal handler: request graceful stop after the current task finishes."""
+    global _shutdown_requested  # noqa: PLW0603
+    _shutdown_requested = True
+    logger.info("Shutdown requested (signal %s). Will stop after current task.", signum)
+
 
 # Retry configuration for transient Ollama/infra failures
 _MAX_RETRIES = 3
@@ -261,6 +274,7 @@ class Orchestrator:
         frameworks: list[str] | None = None,
         annotate: bool = False,
         redis_client: Any = None,
+        deadline: datetime | None = None,
     ) -> list[TaskTrace]:
         """
         Run all tasks × all frameworks with Redis-backed checkpoint/resume.
@@ -301,7 +315,11 @@ class Orchestrator:
         failed = 0
         t0 = time.time()
 
+        _stop_reason: str | None = None
+
         for task in task_list:
+            if _stop_reason:
+                break
             for framework in framework_list:
                 done += 1
                 pair_key = f"{task.task_id}::{framework}"
@@ -309,6 +327,14 @@ class Orchestrator:
                 if pair_key in completed_pairs:
                     skipped += 1
                     continue
+
+                # Check for graceful stop conditions before starting next task
+                if _shutdown_requested:
+                    _stop_reason = "Shutdown requested (signal)"
+                    break
+                if deadline is not None and datetime.now() >= deadline:
+                    _stop_reason = f"Deadline {deadline:%H:%M} reached"
+                    break
 
                 elapsed = time.time() - t0
                 remaining = total - done
@@ -348,8 +374,9 @@ class Orchestrator:
                     )
 
         elapsed_total = time.time() - t0
+        reason_str = f" ({_stop_reason})" if _stop_reason else ""
         print(
-            f"\nRun complete: {len(results)} succeeded, {failed} failed, "
+            f"\nRun complete{reason_str}: {len(results)} succeeded, {failed} failed, "
             f"{skipped} skipped. Total time: {elapsed_total:.0f}s",
             flush=True,
         )
@@ -389,7 +416,7 @@ if __name__ == "__main__":
         nargs="+",
         default=None,
         choices=_SUPPORTED_FRAMEWORKS,
-        help="Frameworks to run. Default: all four.",
+        help="Frameworks to run. Default: all three.",
     )
     parser.add_argument(
         "--category",
@@ -403,6 +430,13 @@ if __name__ == "__main__":
         help="Filter to one difficulty level.",
     )
     parser.add_argument(
+        "--until",
+        type=str,
+        default=None,
+        metavar="HH:MM",
+        help="Stop after the current task once this wall-clock time is reached (e.g. 08:00).",
+    )
+    parser.add_argument(
         "--annotate",
         action="store_true",
         help="Run LLM annotation after each trace.",
@@ -413,6 +447,22 @@ if __name__ == "__main__":
         help="Disable checkpoint/resume (start fresh even if checkpoint exists).",
     )
     args = parser.parse_args()
+
+    # Install signal handlers for graceful shutdown (systemctl stop, Ctrl-C)
+    signal.signal(signal.SIGTERM, _request_shutdown)
+    signal.signal(signal.SIGINT, _request_shutdown)
+
+    # Parse --until into a deadline datetime
+    deadline: datetime | None = None
+    if args.until:
+        hour, minute = (int(x) for x in args.until.split(":"))
+        deadline = datetime.now().replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if deadline <= datetime.now():
+            # Time already passed today — means tomorrow
+            from datetime import timedelta
+
+            deadline += timedelta(days=1)
+        print(f"Deadline set: will stop after {deadline:%Y-%m-%d %H:%M}", flush=True)
 
     # Connect to infrastructure
     db = Database()
@@ -513,6 +563,7 @@ if __name__ == "__main__":
         frameworks=args.frameworks,
         annotate=args.annotate,
         redis_client=redis_client,
+        deadline=deadline,
     )
 
     db.disconnect()
