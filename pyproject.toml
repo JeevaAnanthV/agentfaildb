@@ -21,6 +21,7 @@ dependencies = [
     "httpx>=0.26",
     "python-dotenv>=1.0",
     "structlog>=24.1",
+    "psutil>=5.9",
 ]
 
 [project.optional-dependencies]
