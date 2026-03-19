@@ -50,7 +50,6 @@ class AutoGenRunner(BaseRunner):
                     "model": settings.task_model,
                     "base_url": settings.ollama_base_url,
                     "api_key": "ollama",
-                    "model_extra": {"num_ctx": settings.ollama_num_ctx},
                 }
             ],
             "timeout": settings.run_timeout_seconds,

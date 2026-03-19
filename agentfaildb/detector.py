@@ -162,7 +162,6 @@ class FailureDetector:
 
     @staticmethod
     def _deserialise_annotations(data: dict[str, Any], trace: TaskTrace) -> list[FailureAnnotation]:
-
         results = []
         for item in data.get("annotations", []):
             try:

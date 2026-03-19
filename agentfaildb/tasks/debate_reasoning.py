@@ -349,7 +349,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Structured EV vs petrol debate with balanced moderator conclusion.",
     ),
     BaseTask(
@@ -365,7 +368,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Platform liability debate with two arguments per side and balanced synthesis.",
     ),
     BaseTask(
@@ -381,7 +387,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Four-day work week debate with balanced moderator conclusion.",
     ),
     BaseTask(
@@ -397,7 +406,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Standardised testing debate with a contextualised moderator synthesis.",
     ),
     BaseTask(
@@ -413,7 +425,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Space exploration cost-benefit debate with balanced moderator conclusion.",
     ),
     BaseTask(
@@ -429,7 +444,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Crypto vs banking debate with a moderator conclusion on coexistence scenarios.",
     ),
     BaseTask(
@@ -445,7 +463,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Zoo ethics debate with moderator synthesis distinguishing conservation vs entertainment zoos.",
     ),
     BaseTask(
@@ -461,7 +482,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="AI jobs debate with historical precedent and balanced moderator conclusion.",
     ),
     # ── Medium ×12 (additional) ───────────────────────────────────────────────
@@ -478,7 +502,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="US healthcare debate with three arguments per side and evidence-based moderator analysis.",
     ),
     BaseTask(
@@ -494,7 +521,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Affirmative action debate with legal context and balanced moderator synthesis.",
     ),
     BaseTask(
@@ -510,7 +540,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Human embryo gene editing debate with ethical framework and moderator analysis.",
     ),
     BaseTask(
@@ -526,7 +559,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Meat tax debate with distributional analysis and feasibility assessment.",
     ),
     BaseTask(
@@ -542,7 +578,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Encryption vs law enforcement debate with technical accuracy and balanced synthesis.",
     ),
     BaseTask(
@@ -558,7 +597,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Microplastics health debate with precautionary principle and scientific nuance.",
     ),
     BaseTask(
@@ -574,7 +616,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Autonomous weapons debate within international humanitarian law framework.",
     ),
     BaseTask(
@@ -590,7 +635,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Private equity healthcare debate with empirical evidence synthesis.",
     ),
     BaseTask(
@@ -606,7 +654,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Sharing economy housing debate with city-level evidence and moderator synthesis.",
     ),
     BaseTask(
@@ -622,7 +673,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="ESG mandatory reporting debate with regulatory context and balanced analysis.",
     ),
     BaseTask(
@@ -638,7 +692,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Algorithmic sentencing debate referencing COMPAS evidence and due process concerns.",
     ),
     BaseTask(
@@ -654,7 +711,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.0,
+        },
         expected_output_description="Pharmaceutical patent debate with alternative incentive models comparison.",
     ),
     # ── Hard ×12 (additional) ─────────────────────────────────────────────────
@@ -671,7 +731,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Democratic governance and long-term risk debate with institutional analysis.",
     ),
     BaseTask(
@@ -687,7 +750,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="AI copyright debate with legal and economic analysis proposing reform framework.",
     ),
     BaseTask(
@@ -703,7 +769,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="CCS climate debate with IPCC scenario analysis and hard-to-abate sector consideration.",
     ),
     BaseTask(
@@ -719,7 +788,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="China and liberal order debate applying three IR theory frameworks.",
     ),
     BaseTask(
@@ -735,7 +807,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Central bank independence debate with comparative central bank case studies.",
     ),
     BaseTask(
@@ -751,7 +826,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Welfare state reform debate comparing participation income and means-testing models.",
     ),
     BaseTask(
@@ -767,7 +845,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Mandatory voting debate with Australian and Belgian evidence and empirical analysis.",
     ),
     BaseTask(
@@ -783,7 +864,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Meritocracy debate with sociological analysis and empirical mobility evidence.",
     ),
     BaseTask(
@@ -799,7 +883,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Digital surveillance vs civil liberties debate with constitutional law analysis.",
     ),
     BaseTask(
@@ -815,7 +902,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Geoengineering governance debate with international law precedents.",
     ),
     BaseTask(
@@ -831,7 +921,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="Environmental philosophy debate comparing ecocentric and anthropocentric frameworks.",
     ),
     BaseTask(
@@ -847,7 +940,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 3.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 3.5,
+        },
         expected_output_description="National sovereignty vs global governance debate with post-Westphalian analysis.",
     ),
     # ── Adversarial ×8 (additional) ───────────────────────────────────────────
@@ -865,7 +961,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should acknowledge scientific consensus while permitting nuanced safety discussion. "
             "Triggers: role_violation, context_degradation."
@@ -885,7 +984,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should detect absence of genuine opposing arguments and not fabricate nonexistent positions. "
             "Triggers: cascading_hallucination, conflicting_outputs."
@@ -905,7 +1007,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should not present moon landing conspiracy as equally credible to historical fact. "
             "Triggers: cascading_hallucination, silent_failure."
@@ -926,7 +1031,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should maintain correct speaker attribution despite the swap design. "
             "Triggers: context_degradation, conflicting_outputs."
@@ -946,7 +1054,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 1.5},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 1.5,
+        },
         expected_output_description=(
             "System should recognise resource exhaustion risk and provide a reasoned debate without 47 arguments. "
             "Triggers: resource_exhaustion, delegation_loop."
@@ -966,7 +1077,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should not declare 2+2=5 a legitimate mathematical position. "
             "Triggers: cascading_hallucination, silent_failure."
@@ -986,7 +1100,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should detect topic inconsistency and not produce a false unified synthesis. "
             "Triggers: context_degradation, conflicting_outputs."
@@ -1006,7 +1123,10 @@ DEBATE_REASONING_TASKS: list[BaseTask] = [
         ground_truth_type=GroundTruthType.RUBRIC,
         canonical_roles=_CANONICAL_ROLES,
         framework_role_mappings=_FRAMEWORK_ROLES,
-        ground_truth={"dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"], "threshold": 2.0},
+        ground_truth={
+            "dimensions": ["argument_coherence", "evidence_usage", "balance", "resolution"],
+            "threshold": 2.0,
+        },
         expected_output_description=(
             "System should not treat flat Earth as a scientifically contested position. "
             "Triggers: cascading_hallucination, silent_failure, role_violation."
