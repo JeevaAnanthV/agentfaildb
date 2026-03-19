@@ -91,7 +91,7 @@ def _query_stats() -> dict[str, Any]:
 
             cur.execute("""
                 SELECT
-                    date_trunc('hour', created_at) AS hour,
+                    date_trunc('hour', run_timestamp) AS hour,
                     COUNT(*) AS count
                 FROM traces
                 WHERE task_success IS NOT NULL
@@ -107,7 +107,7 @@ def _query_stats() -> dict[str, Any]:
                 SELECT COUNT(*) AS recent
                 FROM traces
                 WHERE task_success IS NOT NULL
-                  AND created_at >= NOW() - INTERVAL '2 hours'
+                  AND run_timestamp >= NOW() - INTERVAL '2 hours'
             """)
             recent_count = cur.fetchone()["recent"]
             traces_per_hour = recent_count / 2.0 if recent_count else 0
