@@ -504,6 +504,7 @@
                 </div>
                 <span class="res-value" id="ramVal">--</span>
                 <span class="res-detail" id="ramDetail"></span>
+                <button class="btn btn-flush" id="dropCacheBtn" onclick="dropCaches()" title="sync && echo 3 > /proc/sys/vm/drop_caches">DROP CACHE</button>
             </div>
             <div class="resource-row">
                 <span class="res-label">SWAP</span>
@@ -833,6 +834,29 @@
             } catch (e) {
                 alert('Request failed: ' + e);
                 btn.textContent = 'FLUSH';
+                btn.disabled = false;
+            }
+        }
+
+        async function dropCaches() {
+            const btn = document.getElementById('dropCacheBtn');
+            btn.disabled = true;
+            btn.textContent = 'DROPPING...';
+            try {
+                const resp = await fetch('/api/drop-caches', { method: 'POST' });
+                const data = await resp.json();
+                if (resp.ok) {
+                    btn.textContent = 'DONE';
+                    btn.style.background = '#00e676';
+                    setTimeout(() => { btn.textContent = 'DROP CACHE'; btn.style.background = ''; btn.disabled = false; }, 3000);
+                } else {
+                    alert('Drop cache failed: ' + data.message);
+                    btn.textContent = 'DROP CACHE';
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                alert('Request failed: ' + e);
+                btn.textContent = 'DROP CACHE';
                 btn.disabled = false;
             }
         }
