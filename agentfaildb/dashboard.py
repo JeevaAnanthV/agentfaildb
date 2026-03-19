@@ -394,6 +394,44 @@ async def start_service() -> JSONResponse:
         return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
 
 
+@app.post("/api/flush-swap")
+async def flush_swap() -> JSONResponse:
+    """Flush swap: swapoff -a && swapon -a (requires sudoers rule)."""
+    try:
+        off = subprocess.run(
+            ["sudo", "-n", "/usr/sbin/swapoff", "-a"],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        if off.returncode != 0:
+            return JSONResponse(
+                {"status": "error", "message": f"swapoff failed: {off.stderr.strip()}"},
+                status_code=500,
+            )
+        on = subprocess.run(
+            ["sudo", "-n", "/usr/sbin/swapon", "-a"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if on.returncode != 0:
+            return JSONResponse(
+                {"status": "error", "message": f"swapon failed: {on.stderr.strip()}"},
+                status_code=500,
+            )
+        swap = psutil.swap_memory()
+        return JSONResponse(
+            {
+                "status": "ok",
+                "message": f"Swap flushed. Now {swap.percent}% used "
+                f"({round(swap.used / (1024**3), 1)} / {round(swap.total / (1024**3), 1)} GB)",
+            }
+        )
+    except Exception as exc:
+        return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
+
+
 @app.get("/api/stats")
 async def api_stats() -> JSONResponse:
     """JSON endpoint for programmatic access to benchmark stats."""
