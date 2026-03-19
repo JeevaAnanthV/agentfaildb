@@ -3,139 +3,612 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="30">
-    <title>AgentFailDB Dashboard</title>
+    <meta http-equiv="refresh" content="60">
+    <title>AgentFailDB War Room</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;600;700;900&display=swap');
+
+        :root {
+            --bg-dark: #0a0c10;
+            --bg-panel: #11141c;
+            --bg-panel-alt: #161b26;
+            --border: #1e2533;
+            --text: #c9d1d9;
+            --text-dim: #5a6372;
+            --text-bright: #f0f6fc;
+            --green: #00e676;
+            --green-dim: #1b5e20;
+            --red: #ff1744;
+            --red-dim: #b71c1c;
+            --amber: #ffab00;
+            --amber-dim: #ff6f00;
+            --blue: #448aff;
+            --cyan: #00e5ff;
+            --purple: #b388ff;
+            --glow-green: 0 0 20px rgba(0,230,118,0.3);
+            --glow-red: 0 0 20px rgba(255,23,68,0.3);
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e0e0e0; padding: 20px; }
-        h1 { font-size: 1.5rem; margin-bottom: 4px; }
-        .subtitle { color: #888; font-size: 0.85rem; margin-bottom: 20px; }
 
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
-        .kpi { background: #1a1d27; border-radius: 8px; padding: 16px; text-align: center; }
-        .kpi .value { font-size: 2rem; font-weight: 700; color: #58a6ff; }
-        .kpi .label { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text);
+            padding: 16px 20px;
+            min-height: 100vh;
+        }
 
-        .progress-container { background: #1a1d27; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
-        .progress-bar { background: #2d333b; border-radius: 4px; height: 28px; overflow: hidden; position: relative; }
-        .progress-fill { background: linear-gradient(90deg, #238636, #58a6ff); height: 100%; transition: width 0.5s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; }
-        .progress-label { margin-top: 6px; font-size: 0.8rem; color: #888; text-align: center; }
+        /* ── Header ─────────────────────────────────────────── */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: var(--text-bright);
+        }
+        .title span { color: var(--cyan); }
+        .clock {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+        }
 
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-        @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+        /* ── Status + Controls ──────────────────────────────── */
+        .controls { display: flex; align-items: center; gap: 12px; }
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .status-active {
+            background: rgba(0,230,118,0.12);
+            color: var(--green);
+            border: 1px solid rgba(0,230,118,0.3);
+        }
+        .status-inactive {
+            background: rgba(255,23,68,0.1);
+            color: var(--red);
+            border: 1px solid rgba(255,23,68,0.25);
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .pulse-active {
+            background: var(--green);
+            box-shadow: var(--glow-green);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .pulse-inactive {
+            background: var(--red);
+            box-shadow: var(--glow-red);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(0,230,118,0.4); }
+            50% { opacity: 0.5; box-shadow: 0 0 20px rgba(0,230,118,0.7); }
+        }
 
-        .panel { background: #1a1d27; border-radius: 8px; padding: 16px; }
-        .panel h2 { font-size: 1rem; margin-bottom: 12px; color: #c9d1d9; }
+        .btn {
+            padding: 7px 18px;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn-kill { background: var(--red); color: #fff; }
+        .btn-launch { background: var(--green); color: #000; }
+        .next-fire { font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-        th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #21262d; }
-        th { color: #888; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+        /* ── KPI strip ──────────────────────────────────────── */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        @media (max-width: 1000px) { .kpi-strip { grid-template-columns: repeat(3, 1fr); } }
+        .kpi {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 12px;
+            text-align: center;
+        }
+        .kpi .value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .kpi .label {
+            font-size: 0.65rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 6px;
+        }
+        .val-green { color: var(--green); }
+        .val-blue { color: var(--blue); }
+        .val-amber { color: var(--amber); }
+        .val-cyan { color: var(--cyan); }
+        .val-red { color: var(--red); }
+        .val-purple { color: var(--purple); }
 
-        .log-box { background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.75rem; max-height: 300px; overflow-y: auto; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+        /* ── Mission progress ───────────────────────────────── */
+        .progress-section {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+        .progress-header h2 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+        }
+        .progress-pct {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+        }
+        .progress-track {
+            background: #1a2030;
+            border-radius: 4px;
+            height: 22px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--green-dim), var(--green));
+            transition: width 0.8s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 200%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
+        .progress-detail {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 6px;
+            text-align: center;
+        }
 
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
-        .btn { padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
-        .btn:hover { opacity: 0.85; }
-        .btn-danger { background: #da3633; color: #fff; }
-        .btn-success { background: #238636; color: #fff; }
-        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
-        .status-active { background: #238636; color: #fff; }
-        .status-inactive { background: #6e7681; color: #fff; }
+        /* ── Grid layout ────────────────────────────────────── */
+        .grid-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        @media (max-width: 900px) { .grid-main { grid-template-columns: 1fr; } }
 
-        .chart-container { height: 220px; }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        @media (max-width: 1100px) { .grid-3 { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 700px) { .grid-3 { grid-template-columns: 1fr; } }
+
+        /* ── Panels ─────────────────────────────────────────── */
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+        }
+        .panel h2 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .section-icon { font-size: 0.85rem; }
+
+        /* ── Resource bars ──────────────────────────────────── */
+        .resource-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .resource-row:last-child { margin-bottom: 0; }
+        .res-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            width: 50px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .res-bar-track {
+            flex: 1;
+            background: #1a2030;
+            border-radius: 3px;
+            height: 16px;
+            overflow: hidden;
+        }
+        .res-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+        .res-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            width: 48px;
+            text-align: right;
+            flex-shrink: 0;
+        }
+        .res-detail {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            width: 100px;
+            flex-shrink: 0;
+        }
+
+        .color-green { background: var(--green); color: var(--green); }
+        .color-amber { background: var(--amber); color: var(--amber); }
+        .color-red { background: var(--red); color: var(--red); }
+
+        /* CPU core grid */
+        .core-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 4px;
+            margin-top: 10px;
+        }
+        .core-cell {
+            height: 24px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: rgba(0,0,0,0.7);
+            transition: background 0.5s;
+        }
+
+        /* ── GPU section ────────────────────────────────────── */
+        .gpu-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+        .gpu-stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+        .gpu-stat-row span { color: var(--text-dim); }
+        .gpu-stat-row strong { color: var(--text); }
+
+        /* ── Docker containers ──────────────────────────────── */
+        .docker-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+        .docker-row:last-child { border-bottom: none; }
+        .docker-name { flex: 1; color: var(--cyan); }
+        .docker-stat { color: var(--text-dim); width: 70px; text-align: right; }
+        .docker-stat strong { color: var(--text); }
+
+        /* ── Table ──────────────────────────────────────────── */
+        table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+        th, td {
+            padding: 7px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        th {
+            color: var(--text-dim);
+            text-transform: uppercase;
+            font-size: 0.62rem;
+            letter-spacing: 0.08em;
+            font-family: 'Inter', sans-serif;
+        }
+        td.num { text-align: right; }
+        .rate-good { color: var(--green); }
+        .rate-ok { color: var(--amber); }
+        .rate-bad { color: var(--red); }
+
+        /* ── Charts ─────────────────────────────────────────── */
+        .chart-container { height: 200px; }
+
+        /* ── Log tail ───────────────────────────────────────── */
+        .log-box {
+            background: #080a0e;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.68rem;
+            max-height: 280px;
+            overflow-y: auto;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--text-dim);
+        }
+        .log-box::-webkit-scrollbar { width: 6px; }
+        .log-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+        /* ── Live update flash ──────────────────────────────── */
+        .live-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .updated-at {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-dim);
+        }
     </style>
 </head>
 <body>
-    <h1>AgentFailDB Dashboard</h1>
-    <p class="subtitle">Last updated: {{ now }} &bull; Auto-refreshes every 30s</p>
-
-    <!-- Controls -->
-    <div class="controls">
-        <span class="status-badge {{ 'status-active' if service_active else 'status-inactive' }}">
-            {{ 'RUNNING' if service_active else 'STOPPED' }}
-        </span>
-        {% if service_active %}
-        <button class="btn btn-danger" onclick="controlService('stop')">Stop Benchmark</button>
-        {% else %}
-        <button class="btn btn-success" onclick="controlService('start')">Start Benchmark</button>
-        {% endif %}
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="title">AGENT<span>FAIL</span>DB</div>
+            <div class="clock" id="clock"></div>
+        </div>
+        <div class="controls">
+            {% if next_fire %}
+            <div class="next-fire">NEXT RUN: {{ next_fire }}</div>
+            {% endif %}
+            <div class="status-pill {{ 'status-active' if service_active else 'status-inactive' }}" id="statusPill">
+                <span class="pulse-dot {{ 'pulse-active' if service_active else 'pulse-inactive' }}" id="pulseDot"></span>
+                <span id="statusText">{{ 'OPERATIONAL' if service_active else 'OFFLINE' }}</span>
+            </div>
+            {% if service_active %}
+            <button class="btn btn-kill" onclick="controlService('stop')">KILL</button>
+            {% else %}
+            <button class="btn btn-launch" onclick="controlService('start')">LAUNCH</button>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="kpi-grid">
+    <!-- KPI Strip -->
+    <div class="kpi-strip">
         <div class="kpi">
-            <div class="value">{{ stats.completed }}</div>
+            <div class="value val-green">{{ stats.completed }}</div>
             <div class="label">Completed</div>
         </div>
         <div class="kpi">
-            <div class="value">{{ stats.success_rate }}%</div>
+            <div class="value val-blue">{{ stats.success_rate }}%</div>
             <div class="label">Success Rate</div>
         </div>
         <div class="kpi">
-            <div class="value">{{ stats.traces_per_hour }}</div>
-            <div class="label">Traces/Hour</div>
+            <div class="value val-cyan">{{ stats.traces_per_hour }}</div>
+            <div class="label">Traces / Hour</div>
         </div>
         <div class="kpi">
-            <div class="value">{{ stats.remaining }}</div>
+            <div class="value val-amber">{{ stats.remaining }}</div>
             <div class="label">Remaining</div>
         </div>
         <div class="kpi">
-            <div class="value">{% if stats.eta_nights %}{{ stats.eta_nights }}{% else %}&mdash;{% endif %}</div>
-            <div class="label">Est. Nights Left</div>
+            <div class="value val-purple">{% if stats.eta_nights %}{{ stats.eta_nights }}{% else %}&mdash;{% endif %}</div>
+            <div class="label">Est. Nights</div>
+        </div>
+        <div class="kpi">
+            <div class="value val-red">{{ stats.failed_count }}</div>
+            <div class="label">Failed</div>
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="progress-container">
-        {% set pct = (stats.completed / stats.total_runs * 100) if stats.total_runs > 0 else 0 %}
-        <div class="progress-bar">
-            <div class="progress-fill" style="width: {{ pct | round(1) }}%">{{ pct | round(1) }}%</div>
+    <!-- Mission Progress -->
+    <div class="progress-section">
+        <div class="progress-header">
+            <h2>Mission Progress</h2>
+            <span class="progress-pct">{% set pct = (stats.completed / stats.total_runs * 100) if stats.total_runs > 0 else 0 %}{{ pct | round(1) }}%</span>
         </div>
-        <div class="progress-label">{{ stats.completed }} / {{ stats.total_runs }} runs ({{ stats.succeeded }} passed, {{ stats.failed_count }} failed)</div>
+        <div class="progress-track">
+            <div class="progress-fill" style="width: {{ pct | round(1) }}%"></div>
+        </div>
+        <div class="progress-detail">{{ stats.completed }} / {{ stats.total_runs }} runs &mdash; {{ stats.succeeded }} passed, {{ stats.failed_count }} failed</div>
     </div>
 
-    <!-- Charts + Table -->
-    <div class="grid-2">
-        <!-- Per-framework table -->
+    <!-- System Vitals (live-updated via JS) -->
+    <div class="grid-3">
+        <!-- CPU -->
+        <div class="panel" id="cpuPanel">
+            <h2><span class="section-icon">CPU</span> &mdash; <span class="updated-at" id="cpuUpdated"></span></h2>
+            <div class="resource-row">
+                <span class="res-label">TOTAL</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="cpuBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="cpuVal">--</span>
+            </div>
+            <div class="core-grid" id="coreGrid"></div>
+        </div>
+
+        <!-- RAM + Swap -->
+        <div class="panel" id="ramPanel">
+            <h2><span class="section-icon">MEMORY</span></h2>
+            <div class="resource-row">
+                <span class="res-label">RAM</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="ramBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="ramVal">--</span>
+                <span class="res-detail" id="ramDetail"></span>
+            </div>
+            <div class="resource-row">
+                <span class="res-label">SWAP</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="swapBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="swapVal">--</span>
+                <span class="res-detail" id="swapDetail"></span>
+            </div>
+            <div class="resource-row" style="margin-top:6px;">
+                <span class="res-label">DISK</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="diskBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="diskVal">--</span>
+                <span class="res-detail" id="diskDetail"></span>
+            </div>
+        </div>
+
+        <!-- GPU -->
+        <div class="panel" id="gpuPanel">
+            <h2><span class="section-icon">GPU</span></h2>
+            <div class="gpu-name" id="gpuName">Detecting...</div>
+            <div class="resource-row">
+                <span class="res-label">UTIL</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="gpuUtilBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="gpuUtilVal">--</span>
+            </div>
+            <div class="resource-row">
+                <span class="res-label">VRAM</span>
+                <div class="res-bar-track">
+                    <div class="res-bar-fill" id="gpuMemBar" style="width:0%"></div>
+                </div>
+                <span class="res-value" id="gpuMemVal">--</span>
+                <span class="res-detail" id="gpuMemDetail"></span>
+            </div>
+            <div class="gpu-stat-row">
+                <span>TEMP</span> <strong id="gpuTemp">--</strong>
+                <span>POWER</span> <strong id="gpuPower">--</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Docker + Network -->
+    <div class="grid-main">
+        <div class="panel">
+            <h2><span class="section-icon">DOCKER CONTAINERS</span></h2>
+            <div id="dockerList"><span style="color:var(--text-dim)">Loading...</span></div>
+        </div>
+        <div class="panel">
+            <h2><span class="section-icon">NETWORK &amp; UPTIME</span></h2>
+            <div class="resource-row">
+                <span class="res-label" style="width:80px">SENT</span>
+                <span class="res-value val-cyan" id="netSent" style="width:auto">--</span>
+            </div>
+            <div class="resource-row">
+                <span class="res-label" style="width:80px">RECEIVED</span>
+                <span class="res-value val-green" id="netRecv" style="width:auto">--</span>
+            </div>
+            <div class="resource-row" style="margin-top:6px; padding-top:8px; border-top:1px solid var(--border);">
+                <span class="res-label" style="width:80px">UPTIME</span>
+                <span class="res-value val-purple" id="uptime" style="width:auto">--</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts + Framework Table -->
+    <div class="grid-main">
         <div class="panel">
             <h2>Per-Framework Breakdown</h2>
             <table>
-                <thead><tr><th>Framework</th><th>Passed</th><th>Failed</th><th>Total</th><th>Rate</th></tr></thead>
+                <thead><tr><th>Framework</th><th class="num">Passed</th><th class="num">Failed</th><th class="num">Total</th><th class="num">Rate</th></tr></thead>
                 <tbody>
                 {% for row in stats.framework_rows %}
+                {% set rate = (row.succeeded / row.total * 100) | round(1) if row.total > 0 else 0 %}
                 <tr>
                     <td>{{ row.framework }}</td>
-                    <td>{{ row.succeeded }}</td>
-                    <td>{{ row.failed }}</td>
-                    <td>{{ row.total }}</td>
-                    <td>{{ (row.succeeded / row.total * 100) | round(1) if row.total > 0 else 0 }}%</td>
+                    <td class="num">{{ row.succeeded }}</td>
+                    <td class="num">{{ row.failed }}</td>
+                    <td class="num">{{ row.total }}</td>
+                    <td class="num {{ 'rate-good' if rate >= 60 else ('rate-ok' if rate >= 30 else 'rate-bad') }}">{{ rate }}%</td>
                 </tr>
                 {% endfor %}
                 {% if not stats.framework_rows %}
-                <tr><td colspan="5" style="color:#6e7681;">No data yet</td></tr>
+                <tr><td colspan="5" style="color:var(--text-dim);">No data yet</td></tr>
                 {% endif %}
                 </tbody>
             </table>
         </div>
-
-        <!-- Success rate by framework (bar chart) -->
         <div class="panel">
             <h2>Success Rate by Framework</h2>
             <div class="chart-container">
                 <canvas id="frameworkChart"></canvas>
             </div>
         </div>
+    </div>
 
-        <!-- Traces over time (line chart) -->
+    <div class="grid-main">
         <div class="panel">
             <h2>Traces Over Time</h2>
             <div class="chart-container">
                 <canvas id="timelineChart"></canvas>
             </div>
         </div>
-
-        <!-- Category distribution (pie chart) -->
         <div class="panel">
             <h2>Category Distribution</h2>
             <div class="chart-container">
@@ -144,20 +617,30 @@
         </div>
     </div>
 
-    <!-- Log tail -->
-    <div class="panel" style="margin-top: 16px;">
-        <h2>Live Log Tail</h2>
-        <div class="log-box">{% for line in log_lines %}{{ line }}
+    <!-- Log Tail -->
+    <div class="panel" style="margin-top: 14px;">
+        <h2><span class="live-dot"></span> Live Log</h2>
+        <div class="log-box" id="logBox">{% for line in log_lines %}{{ line }}
 {% endfor %}</div>
     </div>
 
     <script>
-        const chartDefaults = {
-            color: '#c9d1d9',
-            borderColor: '#21262d',
-        };
-        Chart.defaults.color = '#c9d1d9';
-        Chart.defaults.borderColor = '#21262d';
+        // ── Clock ──────────────────────────────────────────────────────────
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').textContent = now.toLocaleString('en-IN', {
+                weekday: 'short', month: 'short', day: 'numeric',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            });
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // ── Chart defaults ─────────────────────────────────────────────────
+        Chart.defaults.color = '#5a6372';
+        Chart.defaults.borderColor = '#1e2533';
+        Chart.defaults.font.family = "'JetBrains Mono', monospace";
+        Chart.defaults.font.size = 10;
 
         // Framework bar chart
         const fwLabels = {{ stats.framework_rows | map(attribute='framework') | list | tojson }};
@@ -168,8 +651,8 @@
             data: {
                 labels: fwLabels,
                 datasets: [
-                    { label: 'Passed', data: fwSucceeded, backgroundColor: '#238636' },
-                    { label: 'Failed', data: fwFailed, backgroundColor: '#da3633' },
+                    { label: 'Passed', data: fwSucceeded, backgroundColor: '#00e676' },
+                    { label: 'Failed', data: fwFailed, backgroundColor: '#ff1744' },
                 ]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
@@ -182,7 +665,7 @@
             type: 'line',
             data: {
                 labels: hourLabels.map(h => h ? new Date(h).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : ''),
-                datasets: [{ label: 'Traces', data: hourCounts, borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', fill: true, tension: 0.3 }]
+                datasets: [{ label: 'Traces', data: hourCounts, borderColor: '#448aff', backgroundColor: 'rgba(68,138,255,0.08)', fill: true, tension: 0.3, pointRadius: 2 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
         });
@@ -190,21 +673,149 @@
         // Category pie chart
         const catLabels = {{ stats.category_rows | map(attribute='task_category') | list | tojson }};
         const catCounts = {{ stats.category_rows | map(attribute='total') | list | tojson }};
-        const catColors = ['#58a6ff', '#238636', '#da3633', '#d29922', '#a371f7'];
+        const catColors = ['#448aff', '#00e676', '#ff1744', '#ffab00', '#b388ff'];
         new Chart(document.getElementById('categoryChart'), {
             type: 'doughnut',
             data: {
                 labels: catLabels,
-                datasets: [{ data: catCounts, backgroundColor: catColors.slice(0, catLabels.length) }]
+                datasets: [{ data: catCounts, backgroundColor: catColors.slice(0, catLabels.length), borderWidth: 0 }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
 
-        // Kill/Start switch
+        // ── Resource bar color helper ──────────────────────────────────────
+        function barColor(pct) {
+            if (pct >= 85) return '#ff1744';
+            if (pct >= 60) return '#ffab00';
+            return '#00e676';
+        }
+        function textColorClass(pct) {
+            if (pct >= 85) return 'color-red';
+            if (pct >= 60) return 'color-amber';
+            return 'color-green';
+        }
+
+        // ── Live system stats poll ─────────────────────────────────────────
+        async function pollSystem() {
+            try {
+                const resp = await fetch('/api/system');
+                if (!resp.ok) return;
+                const d = await resp.json();
+
+                // CPU
+                const cpuBar = document.getElementById('cpuBar');
+                cpuBar.style.width = d.cpu_overall + '%';
+                cpuBar.style.background = barColor(d.cpu_overall);
+                document.getElementById('cpuVal').textContent = d.cpu_overall + '%';
+                document.getElementById('cpuVal').style.color = barColor(d.cpu_overall);
+                document.getElementById('cpuUpdated').textContent = d.timestamp;
+
+                // CPU cores
+                const coreGrid = document.getElementById('coreGrid');
+                coreGrid.innerHTML = '';
+                d.cpu_per_core.forEach((pct, i) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'core-cell';
+                    cell.style.background = barColor(pct);
+                    cell.style.opacity = Math.max(0.3, pct / 100);
+                    cell.textContent = Math.round(pct);
+                    coreGrid.appendChild(cell);
+                });
+
+                // RAM
+                document.getElementById('ramBar').style.width = d.ram_pct + '%';
+                document.getElementById('ramBar').style.background = barColor(d.ram_pct);
+                document.getElementById('ramVal').textContent = d.ram_pct + '%';
+                document.getElementById('ramVal').style.color = barColor(d.ram_pct);
+                document.getElementById('ramDetail').textContent = d.ram_used_gb + ' / ' + d.ram_total_gb + ' GB';
+
+                // Swap
+                document.getElementById('swapBar').style.width = d.swap_pct + '%';
+                document.getElementById('swapBar').style.background = barColor(d.swap_pct);
+                document.getElementById('swapVal').textContent = d.swap_pct + '%';
+                document.getElementById('swapVal').style.color = barColor(d.swap_pct);
+                document.getElementById('swapDetail').textContent = d.swap_used_gb + ' / ' + d.swap_total_gb + ' GB';
+
+                // Disk
+                document.getElementById('diskBar').style.width = d.disk_pct + '%';
+                document.getElementById('diskBar').style.background = barColor(d.disk_pct);
+                document.getElementById('diskVal').textContent = d.disk_pct + '%';
+                document.getElementById('diskVal').style.color = barColor(d.disk_pct);
+                document.getElementById('diskDetail').textContent = d.disk_used_gb + ' / ' + d.disk_total_gb + ' GB';
+
+                // GPU
+                if (d.gpu) {
+                    document.getElementById('gpuName').textContent = d.gpu.name;
+                    document.getElementById('gpuUtilBar').style.width = d.gpu.gpu_util + '%';
+                    document.getElementById('gpuUtilBar').style.background = barColor(d.gpu.gpu_util);
+                    document.getElementById('gpuUtilVal').textContent = d.gpu.gpu_util + '%';
+                    document.getElementById('gpuUtilVal').style.color = barColor(d.gpu.gpu_util);
+
+                    const gpuMemPct = Math.round(d.gpu.mem_used_mb / d.gpu.mem_total_mb * 100);
+                    document.getElementById('gpuMemBar').style.width = gpuMemPct + '%';
+                    document.getElementById('gpuMemBar').style.background = barColor(gpuMemPct);
+                    document.getElementById('gpuMemVal').textContent = gpuMemPct + '%';
+                    document.getElementById('gpuMemVal').style.color = barColor(gpuMemPct);
+                    document.getElementById('gpuMemDetail').textContent = d.gpu.mem_used_mb + ' / ' + d.gpu.mem_total_mb + ' MB';
+
+                    const tempColor = d.gpu.temp_c >= 80 ? '#ff1744' : (d.gpu.temp_c >= 65 ? '#ffab00' : '#00e676');
+                    document.getElementById('gpuTemp').innerHTML = '<span style="color:' + tempColor + '">' + d.gpu.temp_c + '&deg;C</span>';
+                    document.getElementById('gpuPower').textContent = d.gpu.power_w + ' / ' + d.gpu.power_limit_w + ' W';
+                } else {
+                    document.getElementById('gpuName').textContent = 'No GPU detected';
+                }
+
+                // Docker
+                const dockerList = document.getElementById('dockerList');
+                if (d.docker && d.docker.length > 0) {
+                    dockerList.innerHTML = d.docker.map(c =>
+                        `<div class="docker-row">
+                            <span class="docker-name">${c.name}</span>
+                            <span class="docker-stat">CPU <strong>${c.cpu}</strong></span>
+                            <span class="docker-stat">MEM <strong>${c.mem_pct}</strong></span>
+                            <span class="docker-stat" style="width:140px">${c.mem_usage}</span>
+                        </div>`
+                    ).join('');
+                } else {
+                    dockerList.innerHTML = '<span style="color:var(--text-dim)">No containers running</span>';
+                }
+
+                // Network
+                document.getElementById('netSent').textContent = d.net_sent_gb + ' GB';
+                document.getElementById('netRecv').textContent = d.net_recv_gb + ' GB';
+                document.getElementById('uptime').textContent = d.uptime;
+
+                // Service status
+                const pill = document.getElementById('statusPill');
+                const dot = document.getElementById('pulseDot');
+                const txt = document.getElementById('statusText');
+                if (d.service_active) {
+                    pill.className = 'status-pill status-active';
+                    dot.className = 'pulse-dot pulse-active';
+                    txt.textContent = 'OPERATIONAL';
+                } else {
+                    pill.className = 'status-pill status-inactive';
+                    dot.className = 'pulse-dot pulse-inactive';
+                    txt.textContent = 'OFFLINE';
+                }
+            } catch (e) {
+                console.error('System poll failed:', e);
+            }
+        }
+
+        // Poll immediately, then every 3 seconds
+        pollSystem();
+        setInterval(pollSystem, 3000);
+
+        // Auto-scroll log to bottom
+        const logBox = document.getElementById('logBox');
+        logBox.scrollTop = logBox.scrollHeight;
+
+        // ── Kill/Start ─────────────────────────────────────────────────────
         async function controlService(action) {
             const btn = event.target;
             btn.disabled = true;
-            btn.textContent = action === 'stop' ? 'Stopping...' : 'Starting...';
+            btn.textContent = action === 'stop' ? 'KILLING...' : 'LAUNCHING...';
             try {
                 const resp = await fetch('/api/' + action, { method: 'POST' });
                 const data = await resp.json();
@@ -213,12 +824,12 @@
                 } else {
                     alert('Error: ' + data.message);
                     btn.disabled = false;
-                    btn.textContent = action === 'stop' ? 'Stop Benchmark' : 'Start Benchmark';
+                    btn.textContent = action === 'stop' ? 'KILL' : 'LAUNCH';
                 }
             } catch (e) {
                 alert('Request failed: ' + e);
                 btn.disabled = false;
-                btn.textContent = action === 'stop' ? 'Stop Benchmark' : 'Start Benchmark';
+                btn.textContent = action === 'stop' ? 'KILL' : 'LAUNCH';
             }
         }
     </script>
