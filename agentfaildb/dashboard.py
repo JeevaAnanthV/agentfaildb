@@ -432,6 +432,33 @@ async def flush_swap() -> JSONResponse:
         return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
 
 
+@app.post("/api/drop-caches")
+async def drop_caches() -> JSONResponse:
+    """Drop page/dentries/inodes cache (requires sudoers rule)."""
+    try:
+        result = subprocess.run(
+            ["sudo", "-n", "/home/jeeva/Videos/agentfaildb/scripts/drop-caches.sh"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        if result.returncode != 0:
+            return JSONResponse(
+                {"status": "error", "message": f"drop_caches failed: {result.stderr.strip()}"},
+                status_code=500,
+            )
+        mem = psutil.virtual_memory()
+        return JSONResponse(
+            {
+                "status": "ok",
+                "message": f"Cache dropped. RAM now {mem.percent}% used "
+                f"({round(mem.used / (1024**3), 1)} / {round(mem.total / (1024**3), 1)} GB)",
+            }
+        )
+    except Exception as exc:
+        return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
+
+
 @app.get("/api/stats")
 async def api_stats() -> JSONResponse:
     """JSON endpoint for programmatic access to benchmark stats."""
