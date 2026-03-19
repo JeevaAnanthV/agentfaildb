@@ -20,18 +20,18 @@ _VALID_CATEGORIES = {
 
 
 class TestAllTasksCount:
-    def test_all_tasks_has_50_items(self) -> None:
-        """ALL_TASKS must contain exactly 50 tasks (10 per category × 5 categories)."""
-        assert len(ALL_TASKS) == 50
+    def test_all_tasks_has_250_items(self) -> None:
+        """ALL_TASKS must contain exactly 250 tasks (50 per category × 5 categories)."""
+        assert len(ALL_TASKS) == 250
 
-    def test_each_category_has_10_tasks(self) -> None:
+    def test_each_category_has_50_tasks(self) -> None:
         for category in _VALID_CATEGORIES:
             tasks = get_tasks_by_category(category)
-            assert len(tasks) == 10, f"Category '{category}' has {len(tasks)} tasks, expected 10"
+            assert len(tasks) == 50, f"Category '{category}' has {len(tasks)} tasks, expected 50"
 
     def test_difficulty_distribution_per_category(self) -> None:
-        """Each category must have 2 easy, 3 medium, 3 hard, 2 adversarial."""
-        expected = {"easy": 2, "medium": 3, "hard": 3, "adversarial": 2}
+        """Each category must have 10 easy, 15 medium, 15 hard, 10 adversarial."""
+        expected = {"easy": 10, "medium": 15, "hard": 15, "adversarial": 10}
         for category in _VALID_CATEGORIES:
             tasks = get_tasks_by_category(category)
             by_diff: dict[str, int] = {}
