@@ -20,7 +20,7 @@ from agentfaildb.trace import FailureCategory
 
 logger = logging.getLogger(__name__)
 
-_FRAMEWORKS = ["crewai", "autogen", "langgraph", "metagpt"]
+_FRAMEWORKS = ["crewai", "autogen", "langgraph"]
 _CATEGORIES = [c.value for c in FailureCategory if c != FailureCategory.NONE]
 
 

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30">
+    <title>AgentFailDB Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e0e0e0; padding: 20px; }
+        h1 { font-size: 1.5rem; margin-bottom: 4px; }
+        .subtitle { color: #888; font-size: 0.85rem; margin-bottom: 20px; }
+
+        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .kpi { background: #1a1d27; border-radius: 8px; padding: 16px; text-align: center; }
+        .kpi .value { font-size: 2rem; font-weight: 700; color: #58a6ff; }
+        .kpi .label { font-size: 0.75rem; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .progress-container { background: #1a1d27; border-radius: 8px; padding: 16px; margin-bottom: 20px; }
+        .progress-bar { background: #2d333b; border-radius: 4px; height: 28px; overflow: hidden; position: relative; }
+        .progress-fill { background: linear-gradient(90deg, #238636, #58a6ff); height: 100%; transition: width 0.5s; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 600; }
+        .progress-label { margin-top: 6px; font-size: 0.8rem; color: #888; text-align: center; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+
+        .panel { background: #1a1d27; border-radius: 8px; padding: 16px; }
+        .panel h2 { font-size: 1rem; margin-bottom: 12px; color: #c9d1d9; }
+
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 6px 10px; text-align: left; border-bottom: 1px solid #21262d; }
+        th { color: #888; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+
+        .log-box { background: #0d1117; border: 1px solid #21262d; border-radius: 6px; padding: 10px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 0.75rem; max-height: 300px; overflow-y: auto; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
+
+        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
+        .btn { padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+        .btn:hover { opacity: 0.85; }
+        .btn-danger { background: #da3633; color: #fff; }
+        .btn-success { background: #238636; color: #fff; }
+        .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .status-active { background: #238636; color: #fff; }
+        .status-inactive { background: #6e7681; color: #fff; }
+
+        .chart-container { height: 220px; }
+    </style>
+</head>
+<body>
+    <h1>AgentFailDB Dashboard</h1>
+    <p class="subtitle">Last updated: {{ now }} &bull; Auto-refreshes every 30s</p>
+
+    <!-- Controls -->
+    <div class="controls">
+        <span class="status-badge {{ 'status-active' if service_active else 'status-inactive' }}">
+            {{ 'RUNNING' if service_active else 'STOPPED' }}
+        </span>
+        {% if service_active %}
+        <button class="btn btn-danger" onclick="controlService('stop')">Stop Benchmark</button>
+        {% else %}
+        <button class="btn btn-success" onclick="controlService('start')">Start Benchmark</button>
+        {% endif %}
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+        <div class="kpi">
+            <div class="value">{{ stats.completed }}</div>
+            <div class="label">Completed</div>
+        </div>
+        <div class="kpi">
+            <div class="value">{{ stats.success_rate }}%</div>
+            <div class="label">Success Rate</div>
+        </div>
+        <div class="kpi">
+            <div class="value">{{ stats.traces_per_hour }}</div>
+            <div class="label">Traces/Hour</div>
+        </div>
+        <div class="kpi">
+            <div class="value">{{ stats.remaining }}</div>
+            <div class="label">Remaining</div>
+        </div>
+        <div class="kpi">
+            <div class="value">{% if stats.eta_nights %}{{ stats.eta_nights }}{% else %}&mdash;{% endif %}</div>
+            <div class="label">Est. Nights Left</div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        {% set pct = (stats.completed / stats.total_runs * 100) if stats.total_runs > 0 else 0 %}
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ pct | round(1) }}%">{{ pct | round(1) }}%</div>
+        </div>
+        <div class="progress-label">{{ stats.completed }} / {{ stats.total_runs }} runs ({{ stats.succeeded }} passed, {{ stats.failed_count }} failed)</div>
+    </div>
+
+    <!-- Charts + Table -->
+    <div class="grid-2">
+        <!-- Per-framework table -->
+        <div class="panel">
+            <h2>Per-Framework Breakdown</h2>
+            <table>
+                <thead><tr><th>Framework</th><th>Passed</th><th>Failed</th><th>Total</th><th>Rate</th></tr></thead>
+                <tbody>
+                {% for row in stats.framework_rows %}
+                <tr>
+                    <td>{{ row.framework }}</td>
+                    <td>{{ row.succeeded }}</td>
+                    <td>{{ row.failed }}</td>
+                    <td>{{ row.total }}</td>
+                    <td>{{ (row.succeeded / row.total * 100) | round(1) if row.total > 0 else 0 }}%</td>
+                </tr>
+                {% endfor %}
+                {% if not stats.framework_rows %}
+                <tr><td colspan="5" style="color:#6e7681;">No data yet</td></tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Success rate by framework (bar chart) -->
+        <div class="panel">
+            <h2>Success Rate by Framework</h2>
+            <div class="chart-container">
+                <canvas id="frameworkChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Traces over time (line chart) -->
+        <div class="panel">
+            <h2>Traces Over Time</h2>
+            <div class="chart-container">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Category distribution (pie chart) -->
+        <div class="panel">
+            <h2>Category Distribution</h2>
+            <div class="chart-container">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Log tail -->
+    <div class="panel" style="margin-top: 16px;">
+        <h2>Live Log Tail</h2>
+        <div class="log-box">{% for line in log_lines %}{{ line }}
+{% endfor %}</div>
+    </div>
+
+    <script>
+        const chartDefaults = {
+            color: '#c9d1d9',
+            borderColor: '#21262d',
+        };
+        Chart.defaults.color = '#c9d1d9';
+        Chart.defaults.borderColor = '#21262d';
+
+        // Framework bar chart
+        const fwLabels = {{ stats.framework_rows | map(attribute='framework') | list | tojson }};
+        const fwSucceeded = {{ stats.framework_rows | map(attribute='succeeded') | list | tojson }};
+        const fwFailed = {{ stats.framework_rows | map(attribute='failed') | list | tojson }};
+        new Chart(document.getElementById('frameworkChart'), {
+            type: 'bar',
+            data: {
+                labels: fwLabels,
+                datasets: [
+                    { label: 'Passed', data: fwSucceeded, backgroundColor: '#238636' },
+                    { label: 'Failed', data: fwFailed, backgroundColor: '#da3633' },
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+        });
+
+        // Timeline line chart
+        const hourLabels = {{ stats.hourly_rows | map(attribute='hour') | list | tojson }};
+        const hourCounts = {{ stats.hourly_rows | map(attribute='count') | list | tojson }};
+        new Chart(document.getElementById('timelineChart'), {
+            type: 'line',
+            data: {
+                labels: hourLabels.map(h => h ? new Date(h).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}) : ''),
+                datasets: [{ label: 'Traces', data: hourCounts, borderColor: '#58a6ff', backgroundColor: 'rgba(88,166,255,0.1)', fill: true, tension: 0.3 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+        });
+
+        // Category pie chart
+        const catLabels = {{ stats.category_rows | map(attribute='task_category') | list | tojson }};
+        const catCounts = {{ stats.category_rows | map(attribute='total') | list | tojson }};
+        const catColors = ['#58a6ff', '#238636', '#da3633', '#d29922', '#a371f7'];
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'doughnut',
+            data: {
+                labels: catLabels,
+                datasets: [{ data: catCounts, backgroundColor: catColors.slice(0, catLabels.length) }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Kill/Start switch
+        async function controlService(action) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = action === 'stop' ? 'Stopping...' : 'Starting...';
+            try {
+                const resp = await fetch('/api/' + action, { method: 'POST' });
+                const data = await resp.json();
+                if (resp.ok) {
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    alert('Error: ' + data.message);
+                    btn.disabled = false;
+                    btn.textContent = action === 'stop' ? 'Stop Benchmark' : 'Start Benchmark';
+                }
+            } catch (e) {
+                alert('Request failed: ' + e);
+                btn.disabled = false;
+                btn.textContent = action === 'stop' ? 'Stop Benchmark' : 'Start Benchmark';
+            }
+        }
+    </script>
+</body>
+</html>

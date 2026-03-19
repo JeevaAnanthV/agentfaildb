@@ -8,7 +8,7 @@ from __future__ import annotations
 from agentfaildb.tasks import ALL_TASKS, get_tasks_by_category, get_tasks_by_difficulty
 from agentfaildb.trace import GroundTruthType
 
-_REQUIRED_FRAMEWORKS = {"crewai", "autogen", "langgraph", "metagpt"}
+_REQUIRED_FRAMEWORKS = {"crewai", "autogen", "langgraph"}
 _VALID_DIFFICULTIES = {"easy", "medium", "hard", "adversarial"}
 _VALID_CATEGORIES = {
     "collaborative_research",
