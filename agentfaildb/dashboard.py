@@ -356,20 +356,37 @@ async def api_system() -> JSONResponse:
 
 @app.post("/api/stop")
 async def stop_service() -> JSONResponse:
-    """Kill switch: stop the benchmark service."""
+    """Kill switch: send SIGTERM, then force-kill if it doesn't stop in 15s."""
     try:
-        result = subprocess.run(
-            ["systemctl", "--user", "stop", SERVICE_NAME],
+        # First try graceful SIGTERM via systemctl kill (non-blocking)
+        subprocess.run(
+            ["systemctl", "--user", "kill", "--signal=SIGTERM", SERVICE_NAME],
             capture_output=True,
             text=True,
-            timeout=10,
+            timeout=5,
         )
-        if result.returncode == 0:
-            return JSONResponse({"status": "stopped", "message": "Service stopped."})
-        return JSONResponse(
-            {"status": "error", "message": result.stderr.strip()},
-            status_code=500,
+        # Wait briefly for graceful stop
+        import time
+
+        for _ in range(5):
+            time.sleep(3)
+            check = subprocess.run(
+                ["systemctl", "--user", "is-active", SERVICE_NAME],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if check.stdout.strip() != "active":
+                return JSONResponse({"status": "stopped", "message": "Service stopped gracefully."})
+        # Force kill if still alive
+        subprocess.run(
+            ["systemctl", "--user", "kill", "--signal=SIGKILL", SERVICE_NAME],
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
+        time.sleep(1)
+        return JSONResponse({"status": "stopped", "message": "Service force-killed."})
     except Exception as exc:
         return JSONResponse({"status": "error", "message": str(exc)}, status_code=500)
 
