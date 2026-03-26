@@ -217,7 +217,7 @@ def run_task(request: RunRequest) -> RunResponse:
     if task is None:
         raise HTTPException(status_code=404, detail=f"Task '{request.task_id}' not found")
 
-    supported = ["crewai", "autogen", "langgraph", "metagpt"]
+    supported = ["crewai", "autogen", "langgraph"]
     if request.framework not in supported:
         raise HTTPException(
             status_code=400,
