@@ -21,6 +21,7 @@ dependencies = [
     "httpx>=0.26",
     "python-dotenv>=1.0",
     "structlog>=24.1",
+    "psutil>=5.9",
 ]
 
 [project.optional-dependencies]
@@ -34,9 +35,10 @@ ml = [
 frameworks = [
     "crewai>=0.28",
     "pyautogen>=0.2",
+    "openai>=1.0,<2.0",
     "langgraph>=0.0.40",
     "langchain-openai>=0.0.8",
-    "metagpt>=0.7",
+    # "metagpt>=0.7",  # Dropped: incompatible with openai<2.0, not worth maintaining
     "asyncpg>=0.29",
 ]
 # Analysis & leaderboard
