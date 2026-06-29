@@ -199,7 +199,8 @@ class TestTier3Evaluation:
         success, score, method = evaluator.evaluate(trace)
 
         assert success is True
-        assert score == pytest.approx(4.0)
+        # raw avg 4.0 (1–5) normalised to 0–1: (4-1)/4 = 0.75
+        assert score == pytest.approx(0.75)
         assert method == "tier3_rubric"
 
     def test_low_scores_return_failure(self) -> None:
@@ -214,7 +215,8 @@ class TestTier3Evaluation:
         success, score, method = evaluator.evaluate(trace)
 
         assert success is False
-        assert score == pytest.approx(1.5)
+        # raw avg 1.5 (1–5) normalised: (1.5-1)/4 = 0.125
+        assert score == pytest.approx(0.125)
 
     def test_mixed_scores_average_correctly(self) -> None:
         evaluator = GroundTruthEvaluator()
@@ -228,8 +230,9 @@ class TestTier3Evaluation:
         trace = _make_trace(GroundTruthType.RUBRIC, gt, "Mixed quality output.")
         success, score, method = evaluator.evaluate(trace)
 
-        assert score == pytest.approx(3.5)
-        assert success is True  # 3.5 >= threshold 3.0
+        # raw avg 3.5 (1–5) normalised: (3.5-1)/4 = 0.625
+        assert score == pytest.approx(0.625)
+        assert success is True  # raw 3.5 >= threshold 3.0
 
     def test_empty_dimensions_returns_max_score(self) -> None:
         evaluator = GroundTruthEvaluator()
@@ -237,7 +240,7 @@ class TestTier3Evaluation:
         trace = _make_trace(GroundTruthType.RUBRIC, gt, "any output")
         success, score, method = evaluator.evaluate(trace)
         assert success is True
-        assert score == pytest.approx(5.0)
+        assert score == pytest.approx(1.0)  # normalised max
 
 
 # ── No ground truth tests ─────────────────────────────────────────────────────

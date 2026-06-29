@@ -8,11 +8,11 @@ from agentfaildb.runners.base_runner import BaseRunner
 
 __all__ = ["BaseRunner", "get_runner_class"]
 
+# MetaGPT was dropped (incompatible with openai<2.0) — see pyproject.toml.
 _RUNNER_REGISTRY: dict[str, str] = {
     "crewai": "agentfaildb.runners.crewai_runner.CrewAIRunner",
     "autogen": "agentfaildb.runners.autogen_runner.AutoGenRunner",
     "langgraph": "agentfaildb.runners.langgraph_runner.LangGraphRunner",
-    "metagpt": "agentfaildb.runners.metagpt_runner.MetaGPTRunner",
 }
 
 

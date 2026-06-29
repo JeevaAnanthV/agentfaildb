@@ -43,7 +43,11 @@ class Settings(BaseSettings):
     redis_db: int = 0
 
     # ── Anthropic (optional) ─────────────────────────────────────────────────
+    # When ANTHROPIC_API_KEY is set, the evaluator/annotator route to the Claude
+    # API instead of local Ollama. anthropic_model is the judge model — default
+    # to the most capable Opus; override to a cheaper tier if cost matters.
     anthropic_api_key: Optional[str] = None
+    anthropic_model: str = "claude-opus-4-8"
 
     # ── Benchmark settings ───────────────────────────────────────────────────
     run_timeout_seconds: int = 120
