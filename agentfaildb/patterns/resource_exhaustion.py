@@ -93,22 +93,22 @@ class ResourceExhaustionPattern(BasePattern):
                     worst_ratio = token_ratio
                     worst_metric = "tokens"
 
-        # Check time
-        if trace.total_time_seconds > 0:
-            time_ratio = trace.total_time_seconds / max(baseline["time_s"], 1)
-            if time_ratio >= self._THRESHOLD_MULTIPLIER:
-                if time_ratio > worst_ratio:
-                    worst_ratio = time_ratio
-                    worst_metric = "time"
-
-        # Check message count
-        msg_count = len(trace.messages)
+        # Check message count — content messages only. Artifact messages
+        # (system control, internal reasoning, checkpoints) vary by framework
+        # instrumentation and would otherwise make this metric an artifact of
+        # how a runner records, not of genuine resource use.
+        msg_count = len(trace.content_messages)
         if msg_count > 0:
             msg_ratio = msg_count / max(baseline["messages"], 1)
             if msg_ratio >= self._THRESHOLD_MULTIPLIER:
                 if msg_ratio > worst_ratio:
                     worst_ratio = msg_ratio
                     worst_metric = "messages"
+
+        # NOTE: wall-clock time is deliberately NOT a trigger. It is hardware-
+        # bound (a slow local GPU inflates it without any genuine multi-agent
+        # runaway) and not portable across machines, so it produced false
+        # positives. It is still reported in the description for context.
 
         if worst_ratio < self._THRESHOLD_MULTIPLIER:
             return []
