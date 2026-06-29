@@ -283,7 +283,7 @@ Respond with ONLY the JSON object, no other text.
             "content-type": "application/json",
         }
         payload = {
-            "model": "claude-haiku-20240307",
+            "model": settings.anthropic_model,
             "max_tokens": 1024,
             "messages": [{"role": "user", "content": prompt}],
         }

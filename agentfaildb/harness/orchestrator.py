@@ -534,9 +534,21 @@ if __name__ == "__main__":
         except Exception as r_exc:
             print(f"Redis unavailable — checkpoint disabled: {r_exc}")
 
-    detector = FailureDetector(redis_client=redis_client)
     evaluator = GroundTruthEvaluator()
-    orchestrator = Orchestrator(db=db, detector=detector, evaluator=evaluator)
+    # Share the evaluator with the detector so SilentFailurePattern's fallback
+    # path reuses it instead of constructing a second one.
+    detector = FailureDetector(redis_client=redis_client, evaluator=evaluator)
+
+    # Wire up the LLM annotator when --annotate is requested. Previously this
+    # was never constructed, so --annotate silently did nothing.
+    annotator = None
+    if args.annotate:
+        from agentfaildb.annotator import LLMAnnotator  # noqa: PLC0415
+
+        annotator = LLMAnnotator()
+        print("LLM annotator enabled.")
+
+    orchestrator = Orchestrator(db=db, detector=detector, evaluator=evaluator, annotator=annotator)
 
     # Build task list
     if args.category:

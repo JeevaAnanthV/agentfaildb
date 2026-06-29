@@ -26,9 +26,11 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+# All scores are normalised to 0–1 (see GroundTruthEvaluator). The tier-3
+# threshold of 0.25 corresponds to the old raw 2.0/5 rubric cutoff.
 _TIER1_SCORE_THRESHOLD = 0.4
 _TIER2_SCORE_THRESHOLD = 0.4
-_TIER3_SCORE_THRESHOLD = 2.0
+_TIER3_SCORE_THRESHOLD = 0.25
 
 
 class SilentFailurePattern(BasePattern):
@@ -60,13 +62,18 @@ class SilentFailurePattern(BasePattern):
             # Empty output — this would be caught by resource_exhaustion or other patterns
             return []
 
-        evaluator = self._get_evaluator()
-
-        try:
-            _, score, _ = evaluator.evaluate(trace)
-        except Exception as exc:
-            logger.warning("SilentFailurePattern evaluator failed: %s", exc)
-            return []
+        # Reuse the score the orchestrator already computed (stored on the trace)
+        # instead of re-running the LLM evaluator — avoids a second, costly
+        # evaluation pass per trace. Fall back to evaluating only when absent.
+        if trace.task_score is not None:
+            score = trace.task_score
+        else:
+            evaluator = self._get_evaluator()
+            try:
+                _, score, _ = evaluator.evaluate(trace)
+            except Exception as exc:
+                logger.warning("SilentFailurePattern evaluator failed: %s", exc)
+                return []
 
         gtt = trace.ground_truth_type
         threshold = self._get_threshold(gtt)

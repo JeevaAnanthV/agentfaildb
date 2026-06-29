@@ -39,3 +39,10 @@ CLAUDE.md
 
 # Misc artifacts
 =0.0.40
+
+# Session / local artifacts
+.cache/
+metagpt/
+venv*/
+*.log
+Pasted image.png

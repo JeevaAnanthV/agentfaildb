@@ -330,6 +330,7 @@ async def dashboard(request: Request) -> HTMLResponse:
     next_fire = _get_next_timer_fire()
 
     return templates.TemplateResponse(
+        request,
         "dashboard.html",
         {
             "request": request,

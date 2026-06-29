@@ -93,11 +93,18 @@ class CrewAIRunner(BaseRunner):
                 idx = step_count_ref[0]
                 step_count_ref[0] += 1
 
-                # Determine source/target from step index
-                agent_idx = idx % len(agents_list)
-                next_idx = (agent_idx + 1) % len(agents_list)
+                # CrewAI tasks run sequentially (one per agent, allow_delegation
+                # is False), so map step index to the agent pipeline by clamping
+                # to the last agent — NOT by modulo, which fabricated a
+                # last→first back-edge and produced phantom delegation loops.
+                # Extra steps for the final agent attribute to it (best-effort;
+                # the step callback can't reliably segment steps per agent).
+                agent_idx = min(idx, len(agents_list) - 1)
                 source = agents_list[agent_idx]
-                target = agents_list[next_idx] if idx < len(agents_list) - 1 else "orchestrator"
+                if agent_idx + 1 < len(agents_list):
+                    target = agents_list[agent_idx + 1]
+                else:
+                    target = "orchestrator"
 
                 content = ""
                 msg_type = MessageType.RESPONSE

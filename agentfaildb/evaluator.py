@@ -280,21 +280,26 @@ class GroundTruthEvaluator:
         """
         Score rubric dimensions via LLM.
 
-        Each dimension is scored 1–5. Average score is compared to threshold.
+        Each dimension is scored 1–5; the pass/fail decision is made on that raw
+        scale against ``threshold`` (default 3.0). The *returned* score is
+        normalised to 0–1 via (avg - 1) / 4 so it is on the same scale as the
+        tier-1/tier-2 scores and can be aggregated/averaged meaningfully.
         """
         dimensions: list[str] = ground_truth.get("dimensions", [])
         threshold: float = ground_truth.get("threshold", 3.0)
 
         if not dimensions:
-            return True, 5.0
+            return True, 1.0
 
         scores: list[float] = []
         for dimension in dimensions:
             score = self._score_rubric_dimension(actual_output, dimension)
             scores.append(score)
 
-        avg_score = sum(scores) / len(scores)
-        return avg_score >= threshold, avg_score
+        avg_score = sum(scores) / len(scores)  # 1–5 scale
+        passed = avg_score >= threshold
+        normalized = max(0.0, min(1.0, (avg_score - 1.0) / 4.0))
+        return passed, normalized
 
     def _score_rubric_dimension(self, actual_output: str, dimension: str) -> float:
         """
@@ -377,7 +382,7 @@ class GroundTruthEvaluator:
             "content-type": "application/json",
         }
         payload = {
-            "model": "claude-haiku-20240307",
+            "model": settings.anthropic_model,
             "max_tokens": 64,
             "messages": [{"role": "user", "content": prompt}],
         }
