@@ -1,14 +1,29 @@
 # AgentFailDB
 
-**A systematic benchmark for failure modes in multi-agent LLM systems.**
+**An open, fully-local reproduction and extension of multi-agent LLM failure analysis — zero API cost on Llama 3.1 8B via Ollama, with a lightweight rule-based detection layer.**
 
-AgentFailDB studies how multi-agent frameworks (CrewAI, AutoGen, LangGraph, MetaGPT) fail when agents collaborate on complex tasks. It captures execution traces, detects failure patterns, and produces annotated datasets for research.
+AgentFailDB runs identical tasks across multiple multi-agent frameworks (CrewAI, AutoGen, LangGraph), captures every inter-agent message into a normalized trace, and applies cheap rule-based detectors for common failure patterns — all running locally on a single consumer GPU at no API cost.
+
+## Relation to prior work
+
+The canonical, validated taxonomy of multi-agent LLM failures already exists:
+**MAST** — Cemri et al., *"Why Do Multi-Agent LLM Systems Fail?"* (NeurIPS 2025) —
+which defines **14 failure modes across 7 frameworks with human-annotated ground truth**.
+MAST is the reference. AgentFailDB does **not** claim to supersede, replace, or
+"be the first" anything — MAST owns that lane.
+
+AgentFailDB is a complementary, practical thing: a **fully-local, zero-cost reproduction
+harness** for studying how these failures show up on small open models you can run
+yourself. The question it actually chases is *how far cheap, local models can be pushed
+toward frontier-grade reliability* — not "what is the taxonomy of failures."
 
 ## Why This Exists
 
-Multi-agent LLM systems fail in ways that single-agent systems don't — cascading hallucinations, infinite delegation loops, context degradation across handoffs, and agents silently producing confident but wrong outputs. These failures are poorly understood because nobody has systematically collected and categorized them.
-
-AgentFailDB fills that gap.
+Multi-agent LLM systems fail in ways single-agent systems don't — cascading
+hallucinations, delegation loops, context degradation across handoffs, and
+confident-but-wrong outputs. Studying these usually means paid API calls across many
+frameworks. AgentFailDB makes that reproducible on a single consumer GPU at zero API
+cost, so anyone can poke at it without a budget.
 
 ## Failure Taxonomy
 
@@ -22,18 +37,22 @@ AgentFailDB fills that gap.
 | 6 | **Silent Confident Failure** | Agents produce wrong output with no indication of uncertainty |
 | 7 | **Resource Exhaustion** | Excessive token usage, time, or message count |
 
+> These are coarse, rule-detectable categories — a simplification of MAST's finer,
+> human-validated 14-mode taxonomy, chosen so they can be flagged cheaply without a
+> human annotator. See **Limitations**.
+
 ## Architecture
 
 ```
-Task Definitions (50 tasks × 5 categories)
+Task Definitions (250 tasks: 50 per category × 5 categories)
     ↓
-Framework Runners (CrewAI, AutoGen, LangGraph, MetaGPT)
+Framework Runners (CrewAI, AutoGen, LangGraph)
     ↓
 Normalized Execution Traces (TaskTrace → PostgreSQL)
     ↓
-Pattern Detection Engine (7 detectors + LLM annotator)
+Rule-based Detection Engine (7 heuristic detectors; optional LLM annotator)
     ↓
-Analysis → HuggingFace Dataset + Leaderboard
+Analysis → leaderboard / exportable dataset
 ```
 
 ## Quick Start
@@ -122,8 +141,7 @@ agentfaildb/
 │   ├── base_runner.py    # Abstract base with timeout/retry
 │   ├── crewai_runner.py
 │   ├── autogen_runner.py
-│   ├── langgraph_runner.py
-│   └── metagpt_runner.py
+│   └── langgraph_runner.py
 ├── tasks/                # 50 benchmark tasks
 ├── patterns/             # 7 failure pattern detectors
 ├── harness/              # Orchestrator, DB, API, trace collector
@@ -137,6 +155,21 @@ agentfaildb/
 - **Database**: PostgreSQL for trace storage
 - **Cache**: Redis for pattern signatures and checkpoints
 - **Detection**: Rule-based patterns + sentence-transformers embeddings + LLM annotation
+
+## Limitations
+
+Read these before drawing conclusions from anything here:
+
+- **The detectors are heuristic signals, not validated labels.** They are cheap
+  rule-based (plus optional embedding) checks. There is **no human-annotated ground
+  truth** in this repo, so **no detection accuracy (precision / recall / Cohen's Kappa)
+  is claimed**. For validated labels, use MAST (see *Relation to prior work*).
+- **Single small model.** All runs use Llama 3.1 8B locally. An 8B model's failure
+  behavior does not necessarily generalize to frontier models.
+- **Framework coverage is best-effort.** Each runner targets a specific framework
+  version; framework API drift can change or break a runner — which is itself a finding
+  about local reproducibility, not a measured property of the framework.
+- **Findings are descriptive, not causal.** Treat any numbers as directional.
 
 ## Contributing
 
