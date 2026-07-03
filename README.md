@@ -25,7 +25,23 @@ confident-but-wrong outputs. Studying these usually means paid API calls across 
 frameworks. AgentFailDB makes that reproducible on a single consumer GPU at zero API
 cost, so anyone can poke at it without a budget.
 
+## Results
+
+A complete **250 × 3 = 750-run** benchmark, done fully locally at **$0 API cost**
+(Llama 3.1 8B on a 6 GB GPU, ~1.06M tokens). Full write-up: **[docs/RESULTS.md](docs/RESULTS.md)**.
+
+Headline: on a local 8B model, multi-agent success tracks **task type, not difficulty** —
+debate/reasoning 99% and planning 83%, but code generation 55% and data analysis 51% (the
+correctness-critical tasks). By framework: CrewAI 83%, LangGraph 83%, AutoGen 51% — and
+CrewAI matches LangGraph's rate on **less than half the tokens**. All figures are
+directional (local 8B judge) — see [Limitations](#limitations).
+
 ## Failure Taxonomy
+
+AgentFailDB has **two independent axes**, easy to conflate: agents work on **5 task
+categories** (collaborative research, code generation, debate/reasoning, planning, data
+analysis), and every run is checked for the **7 failure categories** below. "7" and "5"
+refer to these two different things.
 
 | # | Category | Description |
 |---|----------|-------------|
@@ -142,7 +158,7 @@ agentfaildb/
 │   ├── crewai_runner.py
 │   ├── autogen_runner.py
 │   └── langgraph_runner.py
-├── tasks/                # 50 benchmark tasks
+├── tasks/                # 250 benchmark tasks (5 categories × 50)
 ├── patterns/             # 7 failure pattern detectors
 ├── harness/              # Orchestrator, DB, API, trace collector
 ├── analysis/             # HuggingFace export, metrics computation
