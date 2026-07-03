@@ -4,6 +4,8 @@
 
 AgentFailDB runs identical tasks across multiple multi-agent frameworks (CrewAI, AutoGen, LangGraph), captures every inter-agent message into a normalized trace, and applies cheap rule-based detectors for common failure patterns — all running locally on a single consumer GPU at no API cost.
 
+**📊 [Live results → jeevaananthv.github.io/agentfaildb](https://jeevaananthv.github.io/agentfaildb/)** — the findings in your browser, zero install.
+
 ## Relation to prior work
 
 The canonical, validated taxonomy of multi-agent LLM failures already exists:
@@ -28,7 +30,7 @@ cost, so anyone can poke at it without a budget.
 ## Results
 
 A complete **250 × 3 = 750-run** benchmark, done fully locally at **$0 API cost**
-(Llama 3.1 8B on a 6 GB GPU, ~1.06M tokens). Full write-up: **[docs/RESULTS.md](docs/RESULTS.md)**.
+(Llama 3.1 8B on a 6 GB GPU, ~1.06M tokens). Browse it: **[live dashboard](https://jeevaananthv.github.io/agentfaildb/)** · full write-up: **[docs/RESULTS.md](docs/RESULTS.md)**.
 
 Headline: on a local 8B model, multi-agent success tracks **task type, not difficulty** —
 debate/reasoning 99% and planning 83%, but code generation 55% and data analysis 51% (the
