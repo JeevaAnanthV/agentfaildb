@@ -179,25 +179,33 @@ tags:
   - crewai
   - autogen
   - langgraph
-  - metagpt
+  - local-llm
 size_categories:
-  - 1K<n<10K
+  - n<1K
 ---
 
 # AgentFailDB
 
-**The first benchmark dataset for failure modes in multi-agent LLM systems.**
+**An open, fully-local benchmark of failure modes in multi-agent LLM systems** —
+{stats["total_traces"]:,} execution traces from three frameworks (CrewAI, AutoGen,
+LangGraph) run on a local Llama 3.1 8B model (via Ollama) at **$0 API cost**.
 
-> **{stats["failure_rate"]:.1%} of multi-agent runs exhibit at least one failure mode.**
+## Relation to prior work
 
-## Dataset Description
+The canonical, human-validated taxonomy of multi-agent LLM failures is **MAST** —
+Cemri et al., *"Why Do Multi-Agent LLM Systems Fail?"* (NeurIPS 2025). AgentFailDB does
+**not** supersede or replace it; it is a **fully-local, zero-cost reproduction and
+extension** for studying how these failures show up on small open models you can run
+yourself.
 
-AgentFailDB contains {stats["total_traces"]:,} annotated execution traces from four
-multi-agent frameworks (CrewAI, AutoGen, LangGraph, MetaGPT) across five task
-categories and four difficulty levels.  Each trace is annotated with one or more
-of seven failure categories derived from a formal taxonomy.
+## What's in it
 
-## Failure Taxonomy
+{stats["total_traces"]:,} traces across **5 task categories** (collaborative research,
+code generation, debate/reasoning, planning, data analysis) × 4 difficulty levels, on
+**3 frameworks**. Each trace carries the full inter-agent message log, an LLM-judged
+success score, and any rule-based failure-detector signals.
+
+## Failure-signal taxonomy (heuristic)
 
 | Category | Description |
 |----------|-------------|
@@ -209,21 +217,29 @@ of seven failure categories derived from a formal taxonomy.
 | `silent_failure` | System produces wrong output with no error signals |
 | `resource_exhaustion` | Task consumes excessive tokens/time |
 
+## ⚠️ Limitations — read first
+
+- **The failure signals are heuristic (rule-based), not human-validated labels.**
+  No detection accuracy (precision / recall / Cohen's Kappa) is claimed. For validated
+  labels, use **MAST**.
+- **Success is graded by a local 8B model** — treat all rates as *directional*.
+- **A single small model** (Llama 3.1 8B). Its failure behaviour needn't generalize to
+  frontier models.
+- A rule-based detector fired at least one signal on {stats["failure_rate"]:.1%} of
+  runs — again, a heuristic signal, not a validated failure rate.
+
 ## Quick Start
 
 ```python
 from datasets import load_dataset
 
-ds = load_dataset("agentfaildb/agentfaildb")
+ds = load_dataset("JeevaAnanthV/agentfaildb")
 train = ds["train"]
 
-# Filter to failure traces only
-failures = train.filter(lambda x: x["has_failure"])
-
-# Failure rate by framework
+# Framework success rate (LLM-judged; directional)
 import pandas as pd
 df = train.to_pandas()
-print(df.groupby("framework")["has_failure"].mean().sort_values(ascending=False))
+print(df.groupby("framework")["task_success"].mean().sort_values(ascending=False))
 ```
 
 ## Files
@@ -239,9 +255,10 @@ print(df.groupby("framework")["has_failure"].mean().sort_values(ascending=False)
 
 ```bibtex
 @misc{{agentfaildb2026,
-  title={{AgentFailDB: A Benchmark for Failure Modes in Multi-Agent LLM Systems}},
+  title={{AgentFailDB: A Fully-Local Benchmark of Multi-Agent LLM Failure Modes}},
+  author={{Jeeva Ananth V}},
   year={{2026}},
-  url={{https://github.com/yourusername/agentfaildb}}
+  url={{https://github.com/JeevaAnanthV/agentfaildb}}
 }}
 ```
 """
