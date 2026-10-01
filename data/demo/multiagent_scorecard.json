@@ -1,0 +1,277 @@
+{
+  "source": "AgentFailDB multi-agent benchmark (final 250 x 3 run)",
+  "database": "afdb_clean",
+  "total_runs": 750,
+  "run_window": {
+    "first": "2026-06-29 05:18:21.358703+00",
+    "last": "2026-06-30 08:44:17.650398+00"
+  },
+  "frameworks": [
+    {
+      "framework": "autogen",
+      "runs": 250,
+      "passed": 127,
+      "avg_score": 0.512,
+      "model": "llama3.1:8b",
+      "success_rate": 0.508
+    },
+    {
+      "framework": "crewai",
+      "runs": 250,
+      "passed": 208,
+      "avg_score": 0.781,
+      "model": "llama3.1:8b",
+      "success_rate": 0.832
+    },
+    {
+      "framework": "langgraph",
+      "runs": 250,
+      "passed": 207,
+      "avg_score": 0.794,
+      "model": "llama3.1:8b",
+      "success_rate": 0.828
+    }
+  ],
+  "failure_cells": [
+    {
+      "framework": "autogen",
+      "category": "cascading_hallucination",
+      "runs_flagged": 31,
+      "runs": 250,
+      "rate": 0.124
+    },
+    {
+      "framework": "autogen",
+      "category": "delegation_loop",
+      "runs_flagged": 2,
+      "runs": 250,
+      "rate": 0.008
+    },
+    {
+      "framework": "autogen",
+      "category": "context_degradation",
+      "runs_flagged": 16,
+      "runs": 250,
+      "rate": 0.064
+    },
+    {
+      "framework": "autogen",
+      "category": "conflicting_outputs",
+      "runs_flagged": 16,
+      "runs": 250,
+      "rate": 0.064
+    },
+    {
+      "framework": "autogen",
+      "category": "role_violation",
+      "runs_flagged": 5,
+      "runs": 250,
+      "rate": 0.02
+    },
+    {
+      "framework": "autogen",
+      "category": "silent_failure",
+      "runs_flagged": 19,
+      "runs": 250,
+      "rate": 0.076
+    },
+    {
+      "framework": "autogen",
+      "category": "resource_exhaustion",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "crewai",
+      "category": "cascading_hallucination",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "crewai",
+      "category": "delegation_loop",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "crewai",
+      "category": "context_degradation",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "crewai",
+      "category": "conflicting_outputs",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "crewai",
+      "category": "role_violation",
+      "runs_flagged": 5,
+      "runs": 250,
+      "rate": 0.02
+    },
+    {
+      "framework": "crewai",
+      "category": "silent_failure",
+      "runs_flagged": 22,
+      "runs": 250,
+      "rate": 0.088
+    },
+    {
+      "framework": "crewai",
+      "category": "resource_exhaustion",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "langgraph",
+      "category": "cascading_hallucination",
+      "runs_flagged": 118,
+      "runs": 250,
+      "rate": 0.472
+    },
+    {
+      "framework": "langgraph",
+      "category": "delegation_loop",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    },
+    {
+      "framework": "langgraph",
+      "category": "context_degradation",
+      "runs_flagged": 16,
+      "runs": 250,
+      "rate": 0.064
+    },
+    {
+      "framework": "langgraph",
+      "category": "conflicting_outputs",
+      "runs_flagged": 15,
+      "runs": 250,
+      "rate": 0.06
+    },
+    {
+      "framework": "langgraph",
+      "category": "role_violation",
+      "runs_flagged": 7,
+      "runs": 250,
+      "rate": 0.028
+    },
+    {
+      "framework": "langgraph",
+      "category": "silent_failure",
+      "runs_flagged": 23,
+      "runs": 250,
+      "rate": 0.092
+    },
+    {
+      "framework": "langgraph",
+      "category": "resource_exhaustion",
+      "runs_flagged": 0,
+      "runs": 250,
+      "rate": 0.0
+    }
+  ],
+  "by_task_category": [
+    {
+      "framework": "autogen",
+      "task_category": "code_generation",
+      "runs": 50,
+      "passed": 15
+    },
+    {
+      "framework": "autogen",
+      "task_category": "collaborative_research",
+      "runs": 50,
+      "passed": 23
+    },
+    {
+      "framework": "autogen",
+      "task_category": "data_analysis",
+      "runs": 50,
+      "passed": 7
+    },
+    {
+      "framework": "autogen",
+      "task_category": "debate_reasoning",
+      "runs": 50,
+      "passed": 49
+    },
+    {
+      "framework": "autogen",
+      "task_category": "planning",
+      "runs": 50,
+      "passed": 33
+    },
+    {
+      "framework": "crewai",
+      "task_category": "code_generation",
+      "runs": 50,
+      "passed": 34
+    },
+    {
+      "framework": "crewai",
+      "task_category": "collaborative_research",
+      "runs": 50,
+      "passed": 40
+    },
+    {
+      "framework": "crewai",
+      "task_category": "data_analysis",
+      "runs": 50,
+      "passed": 37
+    },
+    {
+      "framework": "crewai",
+      "task_category": "debate_reasoning",
+      "runs": 50,
+      "passed": 50
+    },
+    {
+      "framework": "crewai",
+      "task_category": "planning",
+      "runs": 50,
+      "passed": 47
+    },
+    {
+      "framework": "langgraph",
+      "task_category": "code_generation",
+      "runs": 50,
+      "passed": 34
+    },
+    {
+      "framework": "langgraph",
+      "task_category": "collaborative_research",
+      "runs": 50,
+      "passed": 45
+    },
+    {
+      "framework": "langgraph",
+      "task_category": "data_analysis",
+      "runs": 50,
+      "passed": 33
+    },
+    {
+      "framework": "langgraph",
+      "task_category": "debate_reasoning",
+      "runs": 50,
+      "passed": 50
+    },
+    {
+      "framework": "langgraph",
+      "task_category": "planning",
+      "runs": 50,
+      "passed": 45
+    }
+  ],
+  "detector_note": "Rule-based detectors, run-level labels; all 295 annotations have source=rule_based. Directional, not human-validated."
+}

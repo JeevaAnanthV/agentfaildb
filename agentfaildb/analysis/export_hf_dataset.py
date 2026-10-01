@@ -166,7 +166,7 @@ def _max_severity(annotations: list) -> str:
 
 def _write_dataset_card(out_dir: Path, stats: dict) -> None:
     card = f"""---
-license: apache-2.0
+license: mit
 task_categories:
   - text-classification
   - text-generation
